@@ -1,0 +1,169 @@
+<div id = "delivList" style = "float:left">
+	<br>
+	<h3>Deliverables</h3>
+	{% if deliverables or aggWuDelivs %}
+	<table id = 'delivsList' style = 'table-layout:fixed;width:80%'>
+		<tr>
+			<th style = 'word-wrap:break-word;width:30%'>Type</th>
+			<th style = 'word-wrap:break-word;width:20%'>Description</th>
+			<th style = 'word-wrap:break-word;width:8%'>Quantity</th>
+			<th style = 'word-wrap:break-word;width:10%'>Spatial Reference</th>
+			<th style = 'word-wrap:break-word;width:8%'>Required Per Contract</th>
+			<th style = 'word-wrap:break-word;width:8%'>Required Per Spec</th>
+			<th style = 'word-wrap:break-word;width:8%' >Delivered</th>
+			<th style = 'word-wrap:break-word;width:8%'>Accepted</th>
+			<th style = 'word-wrap:break-word;width:8%'>Submit Edits</th>
+		</tr>
+		{% for d in deliverables %}
+		<tr id = 'rowDeliv_Gen{{d.id}}' class = 'delivRow'>
+			<td>
+			<select id = 'catSelect_Gen{{d.id}}' style = 'width:100%'>
+			{% for category in categories %}
+			{% if category == d.deliverableCategory.name %}
+			<option selected>{{d.deliverableCategory.name}}</option>
+			{% else %}
+			<option>{{category}}</option>
+			{% endif %}
+			{% endfor %}
+			</select>
+			</td>
+			<td><input id = 'desc_Gen{{d.id}}' type = 'text' value = '{{ d.description }}' style = 'width:100%'></td>
+			<td><input id = 'qty_Gen{{d.id}}' type = 'number' value = '{{ d.quantity }}' style = 'width:100%'></td>
+			<td><input id = 'spatRef_Gen{{d.id}}' type = 'text' value = '{{ d.spatialReference }}' style = 'width:100%'></td>
+			<td><select id = "reqPerContractSelect_Gen{{d.id}}">
+			{% if d.reqPerContract == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><select id = "reqPerSpecSelect_Gen{{d.id}}">
+			{% if d.reqPerSpec == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'False'selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><select id = "delivSelect_Gen{{d.id}}">
+			{% if d.delivered == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><select id = "acceptedSelect_Gen{{d.id}}">
+			{% if d.accepted == True %}
+			<option value = 'False'>No</option>
+			<option value = 'True' selected>Yes</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><input id = "submitGenDelivChg_Gen{{d.id}}" type = "submit" class = "btn-default updateDeliverable" value = "Submit" style = 'display:inline-block'></td>
+		</tr>
+		{% endfor %}
+		{% for awd in aggWuDelivs %}
+		<tr id = 'rowDeliv_Awd{{awd.id}}' class = 'delivRow'>
+			<td>
+			<select id = 'catSelect_Awd{{awd.id}}' style = 'width:100%'>
+			{% for category in categories %}
+			{% if category == awd.category.name %}
+			<option selected>{{awd.category.name}}</option>
+			{% else %}
+			<option>{{category}}</option>
+			{% endif %}
+			{% endfor %}
+			</select>
+			</td>
+			<td><input id = 'desc_Awd{{awd.id}}' type = 'text' value = '{{ awd.description }}' style = 'width:100%'</td>
+			<td><input id = 'qty_Awd{{awd.id}}' type = 'number' value = '{{ awd.quantity }}' style = 'width:100%'></td>
+			<td><input id = 'spatRef_Awd{{awd.id}}' type = 'text' value = '{{ awd.spatialReference }}' style = 'width:100%'></td>
+			<td><select id = "reqPerContractSelect_Awd{{awd.id}}" selected>
+			{% if awd.reqPerContract == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'True'>Yes</option>
+			<option value = 'False' selected>No</option>
+			{% endif %}
+			</select></td>
+			<td><select id = "reqPerSpecSelect_Awd{{awd.id}}">
+			{% if awd.reqPerSpec == True %}
+			<option value = 'False'>No</option>
+			<option value = 'True' selected>Yes</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option> 
+			{% endif %}
+			</select></td>
+			<td><select id = "delivSelect_Awd{{awd.id}}">
+			{% if awd.delivered == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><select id = "acceptedSelect_Awd{{awd.id}}">
+			{% if awd.accepted == True %}
+			<option value = 'True' selected>Yes</option>
+			<option value = 'False'>No</option>
+			{% else %}
+			<option value = 'False' selected>No</option>
+			<option value = 'True'>Yes</option>
+			{% endif %}
+			</select></td>
+			<td><input id = "submitAwDelivChg_Awd{{awd.id}}" type = "submit" class = "btn-default updateDeliverable" value = "Submit" style = 'display:inline-block'></td>
+		</tr>
+		{% endfor %}
+	</table>
+	<br>
+	<div id = 'delivFormBtns' style = 'display:none'>
+		<input id = "submitDelivForm" type = "submit" class = "btn-default" value = "Submit" style = 'display:inline-block'>
+		<input id = "cancelShowDelivForm" type = "submit" class = "btn-default" value = "Cancel Add Deliverable" style = 'display:inline-block'>
+	</div>
+	{% else %}
+	<h4>No deliverables have been entered for this work unit.</h4>
+	<!-- REMOVED ABILITY TO ADD DELIVERABLES FROM SUMMARY PAGE
+
+	<table id = 'delivsList' style = 'table-layout:fixed;width:80%'>
+		<tr>
+			<th style = 'word-wrap:break-word;width:30%'>Type</th>
+			<th style = 'word-wrap:break-word;width:20%'>Description</th>
+			<th style = 'word-wrap:break-word;width:8%'>Quantity</th>
+			<th style = 'word-wrap:break-word;width:10%'>Spatial Reference</th>
+			<th style = 'word-wrap:break-word;width:8%'>Required Per Contract</th>
+			<th style = 'word-wrap:break-word;width:8%'>Required Per Spec</th>
+			<th style = 'word-wrap:break-word;width:8%' >Delivered</th>
+			<th style = 'word-wrap:break-word;width:8%'>Accepted</th>
+		</tr>
+		<tr style = 'width:100%'>
+			<td>
+			<select id = "addDeliverableCategory" name = "addDeliverableCategory" style = 'width:100%'>
+			{% for category in categories %}
+			<option>{{ category }}</option>
+			{% endfor %}
+			</select>
+			</td>
+			<td><input type="text" id="addDescription" style="width:100%"></td>
+			<td><input type="number" id="addQuantity" style="width:100%"></td>
+			<td><input type="text" id="addSpatRef" style="width:100%"></td>
+			<td><select id="addReqPerContract" name="addReqPerContract"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+			<td><select id="addReqPerSpec" name="addReqPerSpec"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+			<td><select id="addDelivered" name="addDelivered"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+			<td><select id="addAccepted" name="addAccepted"><option value= "true">Yes</option><option value = "false" selected>No</option></select></td></tr>
+		</tr>
+	</table>
+	<input id = "submitDelivForm" type = "submit" class = "btn-default" value = "Submit" style = 'display:inline-block'>-->
+	{% endif %}
+	
+	<br>
+</div>		

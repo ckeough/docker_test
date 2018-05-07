@@ -1,0 +1,116 @@
+{% if error %}
+<table id = 'errorTable{{ error.id }}' style = "border:0">
+	<tbody>
+		<tr>
+			<td><label for="errorType{{error.id}}">Error Type:</label></td>							
+			<td id = "errorType{{error.id}}" class="errorTypeSelect">
+				<select id="errorType{{error.id}}" name="errorType{{error.id}}">
+					{% for type in errorTypes %}
+					{% if type == error.errorType %}
+					<option value = "{{type}}" selected>{{type}}</option>
+					{% else %}
+					<option value = '{{type}}' >{{type}}</option>
+					{% endif %}
+					{% endfor %}
+				</select></td>
+		</tr>
+		<tr>
+			<td><label for="errorSubtype{{error.id}}">Error Subtype:</label></td>
+			<td>
+				<select id="errorSubtype{{error.id}}" class="errorSubtypeSelect" name="errorSubtype{{error.id}}">
+					<option value = "NONE">N/A</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="errorDesc{{error.id}}">Error Description:</label></td>
+			<td><textarea type="text" id="errorDesc{{error.id}}" name="errorDesc{{error.id}}"
+						  style="width:400px;height:80px;resize:none;">{{error.description}}</textarea></td>
+		</tr>
+		<tr>
+			<td><label for "errorLocation{{error.id}}">Error Location:</label></td>
+			<td><input type="text" id="errorLoc{{error.id}}" value="{{error.location}}"></td>
+		</tr>
+		<tr>
+			<td><label for="errorImg{{error.id}}">Image:</label></td>
+			<td id "errorImg{{error.id}}">
+				{% for image in error.errorimage_set.all %}
+				<div class = 'imgInputContainer'>
+					<img id = 'image{{image.id}}' src = "{{image.picture.url}}" class="errorDetailImg">
+					<input type="checkbox" class="imgInputCheckbox" id="chk{{image.id}}" name="{{error.id}}">
+					<br>
+				</div>
+				{% endfor %}
+			</td>
+		<tr>
+			<!-- look into empty cell -->
+			<td>
+			</td>
+			<td>
+				<input type="file" class = "changeErrorImage" id="changeErrorImg{{error.id}}" name="changeErrorImg{{error.id}}">
+				<input type="button" class = "deleteImagesButton btn-default" id="deleteImages{{error.id}}" name ="deleteImages{{error.id}}" value ="Delete Selected Images">
+			</td>
+		</tr>
+		</tr>
+		<tr>
+			<td><label for="errorResolved{{error.id}}">Error Resolved?</label></td>
+			<td id="errorResolved{{error.id}}">
+				<select id="errorResolved{{error.id}}" name="errorResolved{{error.id}}">
+                {% if error.resolved %}
+                <option value= "True" selected>True</option>
+                <option value = "False">False</option>
+                {% else %}
+                <option value= "True">True</option>
+                <option value = "False" selected>False</option>
+                {% endif %}
+            </select>
+			</td>
+		</tr>
+		<tr>
+			<br>
+			<td style = "border:none"><input id = "updateError{{error.id}}" type = "button" class = "updateErrorButton btn-default" value = "Update"></td>
+			<td style = "border:none"><input id = "errorDelete{{error.id}}" type = "button" class = "deleteErrorButton btn-default" value = "Delete Error"></td>
+		</tr>
+	</tbody>
+{% else %}
+<h4>Add Error</h4>
+<table id = 'errorTable'>
+	<tbody>
+		<tr>
+		<td><label for="addSelectErrorType{{id}}">Error Type:</label></td>
+		<td>	
+			<select id="addSelectErrorType{{id}}" name="addSelectErrorType{{id}}">
+				{% for type in errorTypes %}
+				<option value = '{{type}}' select>{{type}}</option>
+				{% endfor %}
+			</select>
+		</td>
+		</tr>
+		<tr>
+		<td><label for="addErrorSubtype{{id}}">Error Subtype:</label></td>
+		<td>
+			<select id="addSelectErrorSubtype{{id}}" name="addSelectErrorSubtype{{id}}">
+				<option value = 'NONE' select>N/A</option>
+			</select>
+		</td>
+		</tr>
+		<tr>
+		<td><label for="addErrorDesc{{id}}">Error Description:</label></td>
+		<td><input type="text" id="addErrorDesc{{id}}" name="addErrorDesc{{id}}"></td>
+		</tr>
+		<tr>
+		<td><label>Error Location:</label></td>
+		<td><input type="text" id="addErrorLoc{{id}}" name="addErrorLoc{{id}}"></td>
+		</tr>
+		<tr>
+		<td><label for="addErrorImg{{id}}">Image:</label></td>
+		<td><form id = 'uploadErrorImage'><input type="file" class = "uploadErrImg" id="addErrorImg{{id}}" name="addErrorImg{{id}}"></form></td>
+		</tr>
+		<tr>
+		<td><label for="addErrorResolved{{id}}">Error Resolved?</label></td>
+		<td><select id="addErrorResolved{{id}}" name="addErrorResolved{{id}}"><option value= "true">True</option><option value = "false">False</option></select></td>
+		</tr>
+	</tbody>
+{% endif %}
+</table>
+<br>

@@ -1,0 +1,34 @@
+
+<div id = "AddDeliverablePanel" class = "row no-gutters">
+	<div id = "AddCol" class="col-md-12">
+		<div class="panel panel">
+			<div class="panel-heading" style="background-color:#113a12;">
+				<h3 class="panel-title">Add Deliverable</h3>
+				<span id = "collPanelAdd" class="pull-right clickable panel-collapsed" style="background-color:#113a12;"><i class="glyphicon glyphicon-chevron-down" style="background-color:#113a12;"></i></span>
+			</div>
+			<div class="panel-body hideOnInit">
+				<div id = 'addDeliverableFormContainer'>
+					<div id = "addDeliverableForm" class = "deliverableForm">
+						{% include "deliverable_form.html" %}
+						{% if wuList %}
+						<label for = "#wuDelivMultiSelect">Link Deliverable to the Following Work Units: </label>
+						<br>
+						<select id = "wuDelivMultiSelect" multiple = "multiple">
+						{% for wu in wuList %}
+							<option value= "{{wu.workUnitId}}">{{wu.name}}</option>
+						{% endfor %}
+						<select>
+						{% endif %}
+						<br>
+						<br>
+						<div id = "deliverableButtonsAdd">
+							<input id = "newDeliv" type = "button" class = "btn-default" value = "Submit">
+							<input id = "cancelNewDeliv" type = "button" class = "btn-default" value = "Cancel">
+						</div>
+						<br>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+<div id = "workUnits" class = "hideOnInit">
+	<div id = "wuTabController" class="container-fluid">
+		{% if workUnits %}
+		<ul id = "wuTabObjects" class="nav nav-tabs">
+			{% for wu in workUnits %}
+			<li><a id = "wuLink{{wu.workUnitId}}" href="#workUnitUpdate{{wu.workUnitId}}" data-toggle="tab">{{wu.name}}</a></li>
+			{% endfor %}
+		</ul>
+		<div id = "wuTabContent" class="tab-content">
+			{% for wu in workUnits %}
+			<div class="tab-pane" id="workUnitUpdate{{wu.workUnitId}}" ></div>
+			{% endfor %}
+		</div>
+		{% endif %}
+	</div>
+</div>
+

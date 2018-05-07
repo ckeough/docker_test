@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %}<title>New{{type}} Report - {{review.name}}</title>{% endblock %}
+{% block body %}
+<body>
+<div class = 'container-fluid'>
+<div = 'content'>
+<h3>New {{type}} Report - {{review.name}}</h3>
+<br>
+<form id = 'reportForm' action = "{% url 'newContractorReport' %}" method = 'post' enctype="multipart/form-data">
+{% csrf_token %}
+<div id = "addAoi">
+	<hr>
+	<h4>Add AOI Image</h4>
+	<br>
+	<input id = 'aoiImage' type="file" name="aoiImage">
+</div>
+<br>
+<hr>
+<h4>Accept/Reject Vertical Accuracy</h4>
+<br>
+<p>Based on this review, the USGS-NGTOC <select id = 'relVaPassFail' name = 'relVaPassFail'>
+	<option value= "true">Accepts</option>
+	<option value = "false" selected>Does Not Accept</option>
+</select> the relative vertical accuracy.</p>
+<p>Based on this review, the USGS-NGTOC <select id = 'absVaPassFail' name = 'absVaPassFail'>
+	<option value= "true">Accepts</option>
+	<option value = "false" selected>Does Not Accept</option>
+</select> the absolute vertical accuracy.</p>
+<br>
+<div id = "errorGroups">
+<input type="hidden" name="review" value="{{review.id}}"/>
+<hr>
+<h4>Add Example Images for Error Type/Subtype Groupings</h4>
+{% for key, value in errorGroups.items %}
+{% if key == 'metadata' %}
+<label>Metadata Deliverables</label>
+{% elif key == 'breaklines' %}
+<label>Breaklines Deliverables</label>
+{% elif key == 'dem' %}
+<label>DEM</label>
+{% elif key == 'classified' %}
+<label>Classified Point Cloud</label>
+{% elif key == 'swath' %}
+<label>Swath Point Cloud</label>
+{% elif key == 'reports' %}
+<label>Reports and Shapefiles</label>
+{% elif key == 'other' %}
+<label>Additional Required Deliverables</label>
+{% endif %}
+{% for matchList in value %}
+<div id = 'group_{{key}}_{{forloop.counter}}' style = "border:1px solid black" >
+{% for error in matchList|slice:":1" %}
+<table style='border:none;font-size:14px;' id = "{{key}}">
+<tr><td style='border:none;padding-bottom:1em' align='left'>Error Type: {{error.errorType.name}}</td></tr>
+<tr><td style='border:none;padding-bottom:1em' align='left'>Error Subtype: {{error.errorSubtype}}</td></tr>
+<tr><td style='border:none;padding-bottom:1em' align='left'>Select An Example Image:</td></tr>
+{% endfor %}
+</table>
+
+<table style='border:none;font-size:14px;'>
+<tr>
+{% for error in matchList %}
+{% for image in error.errorimage_set.all %}
+{% if image %}
+{% if forloop.counter|divisibleby:5 %}
+<tr>
+{% endif %}
+<td style='border:none;padding-bottom:1em;word-wrap:break-word' align='left'>
+{%if image%}
+<div class = 'imgInputContainer'>
+<image id = "img{{error.id}}_{{key}}-{{forloop.counter}}" src = "{{image.picture.url}}" class="errorimg imgSelectable">
+<input type="checkbox" class="imgInputCheckbox" id="chk{{error.id}}_{{key}}-{{forloop.counter}}">
+</div>
+{%endif%}
+<!-- SEND BACK IMAGE NAMES FOR ERRORS -->
+<input type="hidden" id="hidden{{error.id}}_{{key}}-{{forloop.counter}}" name="hidden{{error.id}}_{{key}}-{{forloop.counter}}" value=""/>
+</td>
+{% if forloop.counter|divisibleby:5 %}
+</tr>
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+</tr>
+</table>
+</div>
+<br>
+{% endfor %}
+{% endfor %}
+</div>
+</div>
+<hr>
+<br>
+
+<button type = 'submit' value = 'PreviewReport' name = 'preview'>Preview/Download Report</button>
+<button type = 'submit' value = 'SaveReport' name = 'save'>Save Report</button>
+<br>
+<br>
+</form>
+</div><!-- container-fluid -->
+</body>
+<script>
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	
+	var w = document.getElementsByTagName('input'); 
+	for(var i = 0; i < w.length; i++){ 
+		if(w[i].type=='checkbox'){ 
+			var element = w[i];
+			var id = element.id
+			var idString = id.slice(3);
+			var imgId = 'img' + idString;
+			var imgUrl = $('#' + imgId).attr('src');
+			var hiddenId = '#hidden' + idString;
+			if (element.checked){
+				$(hiddenId).val(imgUrl);
+				
+			}
+		}
+	}
+	
+	
+	var file = null;
+	$(document).off('change', '.uploadAoiImg').on('change', '.uploadAoiImg', function(){
+		file = this.files[0];
+	});
+	$(document).off('change', '.imgInputCheckbox').on('change', '.imgInputCheckbox', function (e){	
+		e.preventDefault();
+		var idString = $(this).attr('id').slice(3);
+		var imgId = 'img' + idString;
+		var imgUrl = $('#' + imgId).attr('src');
+		var hiddenId = 'hidden' + idString;
+		if (this.checked){
+			$('#' + hiddenId).val(imgUrl);
+		}
+		else{
+			$('#' + hiddenId).val('');
+		}
+    });	
+	
+	var button;
+	
+	$(document).off('submit', '#reportForm').on('submit', '#reportForm', function (e){	
+		var aoi = $('#aoiImage').val();
+		if (aoi == ''){
+			alert('You must select an AOI image for the report.');
+			return false;
+		}
+    });
+});
+</script>
+{% endblock %}

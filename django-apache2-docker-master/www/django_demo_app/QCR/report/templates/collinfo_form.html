@@ -1,0 +1,431 @@
+<br>
+{% if collInfo %}
+<h3>Collection Information</h3>				
+<table id = 'collInfo'>
+	<tr>
+		<td><label for="areaExtent">Area Extent (SQ MI):</label></td>
+		<td><input type="number" class = "number" id="areaExtent" name="areaExtent" value = "{{collInfo.areaExtent}}"></td>
+	</tr>
+	<tr>
+		<td><label for="collStart">Collection Start:</label></td>
+		<td>
+			<div class = "form-group">
+				<div class='input-group date' id='collStart'>
+					<input id = "collStartText" type='text' class="form-control" value = '{{collInfo.collStart}}'/>
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</span>
+				</div>		
+			</div>
+			<script type="text/javascript">
+				$(function () {
+					$('#collStart').datetimepicker().on('dp.change', function() {
+						$('#updateCollectionInfo').prop('disabled', false);
+						$('#updateCollectionInfo').css('opacity', 1); 
+						$('#cancelUpdateCollectionInfo').prop('disabled', false);
+						$('#cancelUpdateCollectionInfo').css('opacity', 1); 
+					});
+				});
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="collEnd">Collection End:</label></td>
+		<td>
+			<div class = "form-group">
+				<div class='input-group date' id='collEnd'>
+					<input id = "collEndText" type='text' class="form-control" value = '{{collInfo.collEnd}}'/>
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</span>
+				</div>		
+			</div>
+			<script type="text/javascript">
+				$(function () {
+					$('#collEnd').datetimepicker().on('dp.change', function() {
+						$('#updateCollectionInfo').prop('disabled', false);
+						$('#updateCollectionInfo').css('opacity', 1); 
+						$('#cancelUpdateCollectionInfo').prop('disabled', false);
+						$('#cancelUpdateCollectionInfo').css('opacity', 1); 
+					});
+				});
+			</script>						
+		</td>
+	</tr>
+	<tr>
+		<td><label for="tileSize">Tile Size:</label></td>
+		<td><input type="text" id="tileSize" name="tileSize" value = "{{collInfo.tileSize}}"></td>
+	</tr>
+	<tr>
+		<td><label for="selectTsUnits">Tile Size Units:</label></td>
+		{% if collInfo.tsUnits == 'Meters' %}
+		<td>
+			<select id="selectTsUnits" name="selectTsUnits"><option value= "Meters" selected>Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.tsUnits == 'US Survey Feet' %}
+		<td>
+			<select id="selectTsUnits" name="selectTsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet" selected>US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.tsUnits == 'International Feet' %}
+		<td>
+			<select id="selectTsUnits" name="selectTsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet" selected>International Feet</option></select>
+		</td>
+		{% endif %}
+	</tr>
+	<tr>
+		<td><label for="demRes">DEM Resolution:</label></td>
+		<td><input type="number" class = "number" id="demRes" name="demRes" value = "{{collInfo.demRes}}"></td>
+	</tr>
+	<tr>
+		<td><label for="selectDemResUnits">DEM Resolution Units:</label></td>
+		{% if collInfo.demResUnits == 'Meters' %}
+		<td>
+			<select id="selectDemResUnits" name="selectDemResUnits"><option value= "Meters" selected>Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.demResUnits == 'US Survey Feet' %}
+		<td>
+			<select id="selectDemResUnits" name="selectDemResUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet" selected>US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.demResUnits == 'International Feet' %}
+		<td>
+			<select id="selectDemResUnits" name="selectDemResUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet" selected>International Feet</option></select>
+		</td>
+		{% endif %}
+	
+	</tr>
+	<tr>
+		<td><label for="horSrs">Horizontal SRS:</label></td>
+		<td><input type="text" id="horSrs" name="horSrs" value = "{{collInfo.horSrs}}"></td>
+	</tr>
+	<tr>
+		<td><label for="horEpsg">Horizontal EPSG:</label></td>
+		<td><input type="number" class = "number" id="horEpsg" name="horEpsg" value = "{{collInfo.horEpsg}}"></td>
+	</tr>
+	<tr>
+		<td><label for="vertSrs">Vertical SRS:</label></td>
+		<td><input type="text" id="vertSrs" name="vertSrs" value = "{{collInfo.vertSrs}}"></td>
+	</tr>
+	<tr>
+		<td><label for="vertEpsg">Vertical EPSG:</label></td>
+		<td><input type="number" class = "number" id="vertEpsg" name="vertEpsg" value = "{{collInfo.vertEpsg}}"></td>
+	</tr>
+	<tr>
+		<td><label for="qualLevel">Quality Level:</label></td>
+		<td>
+			{% if qualLevels %}
+				<select id="qualLevel" name="qualLevel">
+				{% for QL in qualLevels %}
+					{% if QL.name == qualityLevel %}
+						<option selected value= "{{QL.name}}">{{QL.name}}</option>
+					{% else %}
+						<option value= "{{QL.name}}">{{QL.name}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No quality levels have been entered.</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="lasVersion">LAS Version:</label></td>
+		<td><input type="number" class = "number" id="lasVersion" name="lasVersion" value = "{{collInfo.lasVersion}}"></td>
+	</tr>
+	<tr>
+		<td><label for="configNps">Configured NPS:</label></td>
+		<td><input type="number" class = "number" id="configNps" name="configNps" value = "{{collInfo.configNps}}"></td>
+	</tr>
+	<tr>
+		<td><label for="selectConfigNpsUnits">Configured NPS Units:</label></td>
+		{% if collInfo.configNpsUnits == 'Meters' %}
+		<td>
+			<select id="selectConfigNpsUnits" name="selectConfigNpsUnits"><option value= "Meters" selected>Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.configNpsUnits == 'US Survey Feet' %}
+		<td>
+			<select id="selectConfigNpsUnits" name="selectConfigNpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet" selected>US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.configNpsUnits == 'International Feet' %}
+		<td>
+			<select id="selectConfigNpsUnits" name="selectConfigNpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet" selected>International Feet</option></select>
+		</td>
+		{% endif %}
+	</tr>
+		<td><label for="configAnps">Configured ANPS:</label></td>
+		<td><input type="number" class = "number" id="configAnps" name="configAnps" value = "{{collInfo.configAnps}}"></td>
+	</tr>
+	<tr>
+		<td><label for="selectConfigAnpsUnits">Configured ANPS Units:</label></td>
+		{% if collInfo.configAnpsUnits == 'Meters' %}
+		<td>
+			<select id="selectConfigAnpsUnits" name="selectConfigAnpsUnits"><option value= "Meters" selected>Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif collInfo.configAnpsUnits == 'US Survey Feet' %}
+		<td>
+			<select id="selectConfigAnpsUnits" name="selectConfigAnpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet" selected>US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+		{% elif  collInfo.configAnpsUnits == 'International Feet' %}
+		<td>
+			<select id="selectConfigAnpsUnits" name="selectConfigAnpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet" selected>International Feet</option></select>
+		</td>
+		{% endif %}
+	</tr>
+		<td><label for="configAnpsMethod">Configured ANPS Method:</label></td>
+		<td><input type="text" id="configAnpsMethod" name="configAnpsMethod" value = "{{collInfo.configAnpsMethod}}"></td>
+	</tr>
+	<tr>
+		<td><label for="selectHydroTreatment">Hydro Treatment:</label></td>
+		{% if collInfo.hydroTreatment == 'No' %}
+		<td>
+			<select id="selectHydroTreatment" name = 'selectHydroTreatment'><option value= "No" selected>None</option><option value = "Hydroflatten">Hydroflatten</option><option value= "Hydro-enforcement">Hydro-enforcement</option><option value = "Hydro-condition">Hydro-condition</option></select>
+		</td>
+		{% elif collInfo.hydroTreatment == 'Hydroflatten' %}
+		<td>
+			<select id="selectHydroTreatment" name = 'selectHydroTreatment'><option value= "No">None</option><option value = "Hydroflatten" selected>Hydroflatten</option><option value= "Hydro-enforcement">Hydro-enforcement</option><option value = "Hydro-condition">Hydro-condition</option></select>
+		</td>
+		{% elif collInfo.hydroTreatment == 'Hydro-enforcement' %}
+		<td>
+			<select id="selectHydroTreatment" name = 'selectHydroTreatment'><option value= "No">None</option><option value = "Hydroflatten">Hydroflatten</option><option value= "Hydro-enforcement" selected>Hydro-enforcement</option><option value = "Hydro-condition">Hydro-condition</option></select>
+		</td>
+		{% elif collInfo.hydroTreatment == 'Hydro-condition' %}
+		<td>
+			<select id="selectHydroTreatment" name = 'selectHydroTreatment'><option value= "No">None</option><option value = "Hydroflatten">Hydroflatten</option><option value= "Hydro-enforcement">Hydro-enforcement</option><option value = "Hydro-condition" selected>Hydro-condition</option></select>
+		</td>
+		{% else %}
+		<td>{{collInfo.hydroTreatment}}</td>
+		{% endif %}
+	</tr>
+	<tr>
+		<td><label for="sensorType">Sensor Type:</label></td>
+		<td>
+			{% if sensorTypes %}
+				<select id="sensorType" name="sensorType">
+				{% for ST in sensorTypes %}
+					{% if ST.name == sensorTypes %}
+						<option selected value= "{{ST.name}}">{{ST.name}}</option>
+					{% else %}
+						<option value= "{{ST.name}}">{{ST.name}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No Sensor Types have been entered.</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="sensorUsed">Sensor Used:</label></td>
+		<td>
+			{% if sensorsUsed %}
+				<select id="sensorUsed" name="sensorUsed">
+				{% for SU in sensorsUsed %}
+					{% if SU.name == sensorUsed %}
+						<option selected value= "{{SU.name}}">{{SU.name}}</option>
+					{% else %}
+						<option value= "{{SU.name}}">{{SU.name}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No "Sensors Used" have been entered.</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="scanAngle">Configured Scan Angle (+/- Degrees):</label></td>
+		<td><input type="number" class = "number" id="scanAngle" name="scanAngle" value = "{{collInfo.scanAngle}}"></td>
+	</tr>
+</table>
+{% else %}
+<h3>Add Collection Info</h3>
+<table>
+	<tr>
+		<td><label for="areaExtent">Area Extent (SQ MI)</label></td>
+		<td><input type="number" class = "number" id="areaExtent" name="areaExtent"></td>
+	</tr>
+	<tr>
+		<td><label for="collStart">Collection Start:</label></td>
+		<td>
+			<div class = "form-group">
+				<div class='input-group date' id='collStart'>
+					<input id = "collStartText" type='text'class="form-control" value = ''/>
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</span>
+				</div>		
+			</div>
+			<script type="text/javascript">
+				$(function () {
+					$('#collStart').datetimepicker();
+				});
+			</script>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="collEnd">Collection End:</label></td>
+		<td>
+			<div class = "form-group">
+				<div class='input-group date' id='collEnd'>
+					<input id = "collEndText" type='text'class="form-control" value = ''/>
+					<span class="input-group-addon">
+						<span class="glyphicon glyphicon-calendar"></span>
+					</span>
+				</div>		
+			</div>
+			<script type="text/javascript">
+				$(function () {
+					$('#collEnd').datetimepicker();
+				});
+			</script>					
+		</td>
+	</tr>
+	<tr>
+		<td><label for="tileSize">Tile Size:</label></td>
+		<td><input type="text" id="tileSize" name="tileSize"></td>
+	</tr>
+	<tr>
+		<td><label for="selectTsUnits">Tile Size Units:</label></td>
+		<td>
+			<select id="selectTsUnits" name="selectTsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="demRes">DEM Resolution:</label></td>
+		<td><input type="number" class = "number" id="demRes" name="demRes"></td>
+	</tr>
+	<tr>
+		<td><label for="selectDemResUnits">DEM Resolution Units:</label></td>
+		<td>
+			<select id="selectDemResUnits" name="selectDemResUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="horSrs">Horizontal SRS:</label></td>
+		<td><input type="text" id="horSrs" name="horSrs"></td>
+	</tr>
+	<tr>
+		<td><label for="horEpsg">Horizontal EPSG:</label></td>
+		<td><input type="number" id="horEpsg" name="horEpsg"></td>
+	</tr>
+	<tr>
+		<td><label for="vertSrs">Vertical SRS:</label></td>
+		<td><input type="text" id="vertSrs" name="vertSrs"></td>
+	</tr>
+	<tr>
+		<td><label for="vertEpsg">Vertical EPSG:</label></td>
+		<td><input type="number" id="vertEpsg" name="vertEpsg"></td>
+	</tr>
+	<tr>
+		<td><label for="qualLevel">Quality Level:</label></td>				
+		<td>
+			{% if qualLevels %}
+				<select id="qualLevel" name="qualLevel">
+				{% for QL in qualLevels %}
+					{% if QL == ql %}
+					<option value= "{{QL.name}}" selected>{{QL.name}}</option>
+					{% else %}
+					<option value= "{{QL.name}}">{{QL.name}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No quality levels have been entered</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="lasVersion">LAS Version:</label></td>
+		<td><input type="number" class = "number" id="lasVersion" name="lasVersion"></td>
+	</tr>
+	<tr>
+		<td><label for="configNps">Configured NPS:</label></td>
+		<td><input type="number" class = "number" id="configNps" name="configNps"></td>
+	</tr>
+	<tr>
+		<td><label for="selectConfigNpsUnits">Configured NPS Units:</label></td>
+		<td>
+			<select id="selectConfigNpsUnits" name="selectConfigNpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="configAnps">Configured ANPS:</label></td>
+		<td><input type="number" class = "number" id="configAnps" name="configAnps"></td>
+	</tr>
+	<tr>
+		<td><label for="selectConfigAnpsUnits">Configured ANPS Units:</label></td>
+		<td>
+			<select id="selectConfigAnpsUnits" name="selectConfigAnpsUnits"><option value= "Meters">Meters</option><option value = "US Survey Feet">US Survey Feet</option><option value= "International Feet">International Feet</option></select>
+		</td>
+	</tr>
+		<td><label for="configAnpsMethod">Configured ANPS Method:</label></td>
+		<td><input type="text" id="configAnpsMethod" name="configAnpsMethod"></td>
+	</tr>
+	<tr>
+		<td><label for="selectHydroTreatment">Hydro Treatment:</label></td>
+		<td><select id="selectHydroTreatment" name = 'selectHydroTreatment'><option value= "No">None</option><option value = "Hydroflatten">Hydroflatten</option><option value= "Hydro-enforcement">Hydro-enforcement</option><option value = "Hydro-condition">Hydro-condition</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="sensorType">Sensor Type:</label></td>
+		<td>
+			{% if sensorTypes %}
+				<select id="sensorType" name="sensorType">
+				{% for ST in sensorTypes %}
+					<option value= "{{ST.name}}">{{ST.name}}</option>
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No Sensor Types have been entered</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="sensorUsed">Sensor Used:</label></td>
+		<td>
+			{% if sensorsUsed %}
+				<select id="sensorUsed" name="sensorUsed">
+				{% for SU in sensorsUsed %}
+					<option value= "{{SU.name}}">{{SU.name}}</option>
+				{% endfor %}
+				</select>
+			{% else %}
+				<p>No "Sensors Used" have been entered</p>
+			{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td><label for="scanAngle">Configured Scan Angle (+/- Degrees):</label></td>
+		<td><input type="number" class = "number" id="scanAngle" name="scanAngle"></td>
+	</tr>
+</table>
+{% endif %}
+<br>
+{% if wuList %}
+<label for = "#wuCiMultiSelect">Apply Collection Info to the Following Work Units: </label>
+<br>
+<select id = "wuCiMultiSelect" multiple = "multiple">
+{% for key, value in wuList.items %}
+<option value = "Work Unit {{ key }}">{{ value }}</option>
+{% endfor %}
+</select><br><br>
+{% endif %}
+{% if not form %}
+<div id = 'wuSameInfo'>
+<label>Work Units With Same Collection Information:</label>
+{% if wuSameInfo %}
+<ul id = 'wuSameInfoList'>
+{% for wu in wuSameInfo %}
+<li>{{wu.name}}</li>
+{% endfor %}
+</ul>
+<br>
+{% else %}
+<h4>None</h4>
+{% endif %}
+</div>
+{% endif %}
+{% if collInfo %}
+<input id = "updateCollectionInfo" type = "button" class = "btn-default" value = "Update Collection Info"/>
+<input id = "cancelUpdateCollectionInfo" type = "button" class = "btn-default" value = "Cancel Update"/>
+<input id = "deleteCollectionInfo" type = "button" class = "btn-default" value = "Delete Collection Info"/>
+<input id = "removeCollectionInfo" type = "button" class = "btn-default" value = "Remove Collection Info from Work Unit"/>	
+{% endif %}			

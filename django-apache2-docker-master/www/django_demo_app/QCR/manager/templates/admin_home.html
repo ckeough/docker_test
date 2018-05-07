@@ -1,0 +1,693 @@
+{% extends 'base.html' %}
+{% block title %}<title>Admin Home - {{user}}</title>{% endblock %}
+{% block body %}
+<body>
+<div class = 'container-fluid'>
+	<h2>Welcome, {{user}}!</h2>
+	{% if devMode %}
+	<p>DEVELOPER MODE ENABLED</p>
+	{% endif %}
+	<hr>
+	<div id = "adminTabController" class="container-fluid">
+		<ul id = "adminTabs" class="nav nav-tabs">
+			<li><a href="#reviews" data-toggle="tab">Manage Reviews</a></li>	
+			<li><a href="#reviewChecklist" data-toggle="tab">Manage Review Checklist</a></li>
+			<li><a href="#workPackages" data-toggle="tab">Manage Work Packages</a></li>
+			<li><a href="#users" data-toggle="tab">Manage Users</a></li>	
+			<li><a href="#optionDomains" data-toggle="tab">Manage Option Domains</a></li>	
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane" id="reviews">
+				<div id = 'reviewDetail'>
+				</div>
+			</div>
+			<div class = "tab-pane" id = 'reviewChecklist'>
+				<br>
+				<h4>Add / Delete Checklist Steps by Category:</h4>
+				<br>
+				<div id = 'checklistTabController' class = 'container-fluid'>
+					<ul id = "checklistTabs" class="nav nav-tabs">
+						{% for category, items in checklistItems.items %}
+						<li><a class = 'checklistTab' href="#{{category|slice:':3'}}" data-toggle="tab">{{category}}</a></li>
+						{% endfor %}
+					</ul>
+					<div class = 'tab-content'>
+						{% for category, items in checklistItems.items %}
+							<div class="tab-pane" id="{{category|slice:':3'}}">
+								{% include 'checklistTabContent.html' %}
+
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			<div class ="tab-pane" id="workPackages">
+				<br>
+				<h4>Manage Work Packages</h4>
+				
+				<div class = 'row row-eq-height'>
+					<div class = 'col-md-6 vcenter text-center'>
+						<hr>
+						<br>
+						{% if packageList%}
+						<table id = "activeWpTable" style="border:none;font-size:14px">
+							<tr>
+								<td style = "width:350;border:none;padding-bottom:1em"><label>Work Package Name</label></td>
+								<td style = 'width:300;border:none;padding-bottom:1em'><label>Point of Contact</label></td>
+								<td style = 'width:275;border:none;padding-bottom:1em'><label>Project Spec</label></td>
+								<td style = 'width:300;border:none;padding-bottom:1em'><label>Work Package Detail</label></td>
+							</tr>
+							{% for package in packageList %}
+							<tr class = 'wpDetail'>
+								<td style = 'width:350;border:none;padding-bottom:1em'>{{package.name}}</td>
+								<td style = 'width:300;border:none;padding-bottom:1em'>{{package.poc}}</td>
+								<td style = 'width:275;border:none;padding-bottom:1em'>{{package.projectSpec}}</td>
+								<td style = 'width:300;border:none;padding-bottom:1em'><a href="{% url 'adminWpDetail' package.workPackageId %}">Link</a></td>
+							</tr>
+							{% endfor %}
+						</table>
+						{% else %}
+						<p align = 'left'>No Work Packages have been loaded yet.</p>
+						{% endif %}
+						<br>
+						<hr>
+						<br>
+						{% if not devMode %}
+						<div id = 'wpSearchForm' align = 'left'>
+						{% include 'wp_search_form.html' %}
+						</div>
+
+						<div id = 'ptsWorkPackages'>
+							
+						</div>
+						<div id = 'loadWpBtn' class = 'hideOnInit' align = 'left'>
+							<button id = 'loadWp' class="btn-default">Load Work Packages</button>		
+						</div>
+						{% else %}
+						<div id = 'addWorkPkgBtn' align = 'left'>
+						<button id = 'addWorkPackage' class="btn-default">Add New Work Package</button>
+						</div>
+						{% endif %}
+					</div><!-- col-md-3 -->
+				</div><!-- row-eq-height -->
+			</div>
+			<div class ="tab-pane" id="users">
+				<br>
+				<h4>Manage Users</h4>
+				<div class = 'row row-eq-height'>
+					<div class = 'col-md-3 vcenter text-center'>
+						<p>Authorized QCR Users</p>
+						<select multiple = "multiple" class = "form-control center-block" id = 'qcrUsers'>
+						{% for qcrUser in qcrUsers %}
+							<option id = "{{qcrUser}}" selected value= "{{qcrUser}}">{{qcrUser}}</option>
+						{% endfor %}
+						</select>
+					</div><!-- col-md-3 -->
+						<div class = 'col-md-1 vcenter text-center'>
+						<button id = 'addUsrBtn' class="btn-default btn-xs"><span class="glyphicon glyphicon-triangle-left"></span></button>
+						<button id = 'rmvUsrBtn' class="btn-default btn-xs"><span class="glyphicon glyphicon-triangle-right"></span></button>		
+					</div><!-- col-md-1 -->
+					<div class = 'col-md-3 vcenter text-center'>
+						<p>Authenticated USGS Users Pending Approval</p>
+						<select multiple = "multiple" class = "form-control center-block" id = 'usgsUsers'>
+						{% for usgsUser in usgsUsers %}
+							<option id = "{{usgsUser}}" selected value= "{{usgsUser}}">{{usgsUser}}</option>
+						{% endfor %}
+						</select>
+					</div><!-- col-md-3 -->
+				</div><!-- row-eq-height -->
+			</div>
+			<div class ="tab-pane" id="optionDomains">
+				<br>
+				<h4>Manage "Quality Level Values"</h4>
+				<br>
+				<div class = 'row row-eq-height'>
+					<div class = 'col-md-3'>
+					
+						<div id = "addQualityLevel">
+							<label>Add Quality Level Value</label>	
+							<br>
+							<input type="text" class = "text" id="addQualityLevelInput" style = "width:50px;display:inline" maxlength = "3" value = "">
+							<input id = "addQualityLevelBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Submit">
+							<input id = "cxlQualityLevelBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Clear">
+						</div>			
+						<div id = "deleteQualityLevel">
+							{% if qualityLevels %}
+								<br>
+								<label for = "qualityLevelDelete">Delete Quality Level Value</label>					
+								<select id="qualityLevelDelete" name="qualityLevelDelete">
+								{% for QL in qualityLevels %}
+									{% if forloop.first %}
+										<option select value= "{{QL.name}}">{{QL.name}}</option>
+									{% else %}
+										<option value= "{{QL.name}}">{{QL.name}}</option>
+									{% endif %}
+								{% endfor %}
+								</select>
+								<input id = "deleteQualityLevelBtn" type = "button" class = "btn-default" value = "Delete">
+							{% else %}
+								<br>
+								<p>No quality levels have been entered in the database.</p>
+							{% endif %}
+						</div>
+					</div> <!-- col-md-3 -->
+				</div><!-- row -->	
+					<hr>
+				<h4>Manage "Sensor Used" Values</h4>
+				<br>
+				<div class = 'row row-eq-height'>
+					<div class = 'col-md-3'>
+					
+						<div id = "addSensorUsed">
+							<label>Add "Sensor Used" Value</label>	
+							<br>
+							<input type="text" class = "text" id="addSensorUsedInput" style = "width:50px;display:inline" maxlength = "25" value = "">
+							<input id = "addSensorUsedBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Submit">
+							<input id = "cxlSensorUsedBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Clear">
+						</div>			
+						<div id = "deleteSensorUsed">
+							{% if sensorsUsed %}
+								<br>
+								<label for = "sensorUsedDelete">Delete "Sensor Used" Value</label>					
+								<select id="sensorUsedDelete" name="sensorUsedDelete">
+								{% for SU in sensorsUsed %}
+									{% if forloop.first %}
+										<option select value= "{{SU.name}}">{{SU.name}}</option>
+									{% else %}
+										<option value= "{{SU.name}}">{{SU.name}}</option>
+									{% endif %}
+								{% endfor %}
+								</select>
+								<input id = "deleteSensorUsedBtn" type = "button" class = "btn-default" value = "Delete">
+							{% else %}
+								<br>
+								<p>No "Sensor Used" values have been entered in the database.</p>
+							{% endif %}
+						</div>
+					</div> <!-- col-md-3 -->
+				</div><!-- row -->	
+				<hr>
+				<h4>Manage "Sensor Type" Values</h4>
+				<br>
+				<div class = 'row row-eq-height'>
+					<div class = 'col-md-3'>
+					
+						<div id = "addSensorType">
+							<label>Add "Sensor Type" Value</label>	
+							<br>
+							<input type="text" class = "text" id="addSensorTypeInput" style = "width:50px;display:inline" maxlength = "25" value = "">
+							<input id = "addSensorTypeBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Submit">
+							<input id = "cxlSensorTypeBtn" type = "button" class = "btn-default" style = 'display:inline' value = "Clear">
+						</div>			
+						<div id = "deleteSensorType">
+							{% if sensorTypes %}
+								<br>
+								<label for = "sensorTypeDelete">Delete "Sensor Type" Value</label>					
+								<select id="sensorTypeDelete" name="sensorTypeDelete">
+								{% for ST in sensorTypes %}
+									{% if forloop.first %}
+										<option select value= "{{ST.name}}">{{ST.name}}</option>
+									{% else %}
+										<option value= "{{ST.name}}">{{ST.name}}</option>
+									{% endif %}
+								{% endfor %}
+								</select>
+								<input id = "deleteSensorTypeBtn" type = "button" class = "btn-default" value = "Delete">
+							{% else %}
+								<br>
+								<p>No "Sensor Type" values have been entered in the database.</p>
+							{% endif %}
+						</div>
+					</div> <!-- col-md-3 -->
+				</div><!-- row -->	
+			</div>
+		</div>
+	</div>
+
+	
+</div> <!-- container-fluid -->
+<br>
+</body>
+
+<script>
+$(document).ready(function(){
+	// Quality Level Buttons
+	function setManageQualityLevelButtonHandlers(){	
+		$(document).off('click', '#cxlQualityLevelBtn').on('click', '#cxlQualityLevelBtn', function (e){
+			$('#addQualityLevelInput').val('');		
+		});
+		
+		$(document).off('click', '#addQualityLevelBtn').on('click', '#addQualityLevelBtn', function (e){
+			e.preventDefault();
+			var duplicate = false;
+			newQualityLevel = $('#addQualityLevelInput').val();
+			$("#qualityLevelDelete").each(function(){
+				if ($(this).val() == newQualityLevel){
+					alert('Quality Level ' + newQualityLevel + ' has already been entered.');
+					$('#addQualityLevelInput').val('');
+					duplicate = true;
+					return false;						
+				}
+			});
+			if (duplicate == false){
+				var json = JSON.stringify({
+					'qualityLevel': $('#addQualityLevelInput').val()
+				});	
+				$.ajax({
+					url: "{% url 'addQualityLevel' %}",
+					type: "POST",
+					data: json,
+					success: function(data) {
+						location.href = "{% url 'adminHomePage' %}4";
+					}
+				});		
+			}
+		});	
+		
+		$(document).off('click', '#deleteQualityLevelBtn').on('click', '#deleteQualityLevelBtn', function (e){
+			e.preventDefault();
+			var json = JSON.stringify({
+				'qualityLevel': $('select[id="qualityLevelDelete"]').val()
+			});	
+			$.ajax({
+				url: "{% url 'deleteQualityLevel' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					location.href = "{% url 'adminHomePage' %}4";
+				}
+			});				
+		});
+	};
+	
+	// Sensors Used Buttons
+	function setManageSensorsUsedButtonHandlers(){	
+		$(document).off('click', '#cxlSensorUsedBtn').on('click', '#cxlSensorUsedBtn', function (e){
+			$('#addSensorUsedInput').val('');		
+		});
+		
+		$(document).off('click', '#addSensorUsedBtn').on('click', '#addSensorUsedBtn', function (e){
+			e.preventDefault();
+			var duplicate = false;
+			newSensorUsed = $('#addSensorUsedInput').val();
+			$("#sensorUsedDelete").each(function(){
+				if ($(this).val() == newSensorUsed){
+					alert('Sensor ' + newSensorUsed + ' has already been entered.');
+					$('#addSensorUsedInput').val('');
+					duplicate = true;
+					return false;						
+				}
+			});
+			if (duplicate == false){
+				var json = JSON.stringify({
+					'sensorUsed': $('#addSensorUsedInput').val()
+				});	
+				$.ajax({
+					url: "{% url 'addSensorUsed' %}",
+					type: "POST",
+					data: json,
+					success: function(data) {
+						location.href = "{% url 'adminHomePage' %}4";
+					}
+				});		
+			}
+		});	
+		
+		$(document).off('click', '#deleteSensorUsedBtn').on('click', '#deleteSensorUsedBtn', function (e){
+			e.preventDefault();
+			var json = JSON.stringify({
+				'sensorUsed': $('select[id="sensorUsedDelete"]').val()
+			});	
+			$.ajax({
+				url: "{% url 'deleteSensorUsed' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					location.href = "{% url 'adminHomePage' %}4";
+				}
+			});				
+		});
+	};
+	
+	// Sensor Type Buttons
+	function setManageSensorTypesButtonHandlers(){	
+		$(document).off('click', '#cxlSensorTypeBtn').on('click', '#cxlSensorTypeBtn', function (e){
+			$('#addSensorTypeInput').val('');		
+		});
+		
+		$(document).off('click', '#addSensorTypeBtn').on('click', '#addSensorTypeBtn', function (e){
+			e.preventDefault();
+			var duplicate = false;
+			newSensorType = $('#addSensorTypeInput').val();
+			$("#sensorTypeDelete").each(function(){
+				if ($(this).val() == newSensorType){
+					alert('Sensor Type ' + newSensorType + ' has already been entered.');
+					$('#addSensorTypeInput').val('');
+					duplicate = true;
+					return false;						
+				}
+			});
+			if (duplicate == false){
+				var json = JSON.stringify({
+					'sensorType': $('#addSensorTypeInput').val()
+				});	
+				$.ajax({
+					url: "{% url 'addSensorType' %}",
+					type: "POST",
+					data: json,
+					success: function(data) {
+						location.href = "{% url 'adminHomePage' %}4";
+					}
+				});		
+			}
+		});	
+		
+		$(document).off('click', '#deleteSensorTypeBtn').on('click', '#deleteSensorTypeBtn', function (e){
+			e.preventDefault();
+			var json = JSON.stringify({
+				'sensorType': $('select[id="sensorTypeDelete"]').val()
+			});	
+			$.ajax({
+				url: "{% url 'deleteSensorType' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					location.href = "{% url 'adminHomePage' %}4";
+				}
+			});				
+		});
+	};
+	
+	function setManageUserButtonHandlers(){	
+		$(document).off('click', '#addUsrBtn').on('click', '#addUsrBtn', function (e){
+			var selectedUser = $('#usgsUsers').val();
+			jsonDict = {};
+			jsonDict['user'] = selectedUser;
+			var json = JSON.stringify(jsonDict);
+			
+			$.ajax({
+				url: "{% url 'addUser' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					if (data['success'] == 'True'){
+						$('#qcrUsers').empty();
+						$('#usgsUsers').empty();
+						$('#selectQcrUsers').empty();
+						$.each(data['qcrUsers'], function(){
+							$('#qcrUsers').append($('<option>',{
+								id: this,
+								value:this,
+								text:this
+							}));
+							$('#selectQcrUsers').append($('<option>',{
+								id: this,
+								value:this,
+								text:this
+							}));
+						});
+						$.each(data['usgsUsers'], function(){
+							$('#usgsUsers').append($('<option>',{
+								id:this,
+								value:this,
+								text:this
+							}));
+						})
+					};
+				}
+			});
+		});	
+		
+		$(document).off('click', '#rmvUsrBtn').on('click', '#rmvUsrBtn', function (e){
+			var selectedUser = $('#qcrUsers').val();
+			jsonDict = {};
+			jsonDict['user'] = selectedUser;
+			var json = JSON.stringify(jsonDict);
+			
+			$.ajax({
+				url: "{% url 'removeUser' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					if (data['success'] == 'True'){
+						$('#qcrUsers').empty();
+						$('#usgsUsers').empty();
+						$('#selectQcrUsers').empty();
+						$.each(data['qcrUsers'], function(){
+							$('#qcrUsers').append($('<option>',{
+								id: this,
+								value:this,
+								text:this
+							}));
+							$('#selectQcrUsers').append($('<option>',{
+								id: this,
+								value:this,
+								text:this
+							}));
+						});
+						$.each(data['usgsUsers'], function(){
+							$('#usgsUsers').append($('<option>',{
+								id:this,
+								value:this,
+								text:this
+							}));
+						})
+					};
+				}
+			});	
+		});
+		
+	};
+	
+	function setChecklistButtonHandlers(){
+	
+		$(document).off('click', '.showForm').on('click', '.showForm', function (e){
+			e.preventDefault();
+			var fullId = this.id;
+			var id = fullId.slice(-3)
+			$('#form' + id).show();
+			$('#showFormBtn' + id).hide();
+			
+		});
+		
+		$(document).off('click', '.submitForm').on('click', '.submitForm', function (e){
+			e.preventDefault();
+			var fullId = this.id;
+			var id = fullId.slice(-3);
+			json = JSON.stringify({
+					'placement': $('#placement' + id).val(),
+					'description': $('#desc' + id).val(),
+					'category':$('#cat' + id).val()
+					});
+			url = "{% url 'addChecklistItem' %}";
+			$.ajax({
+				url: url,
+				data: json,
+				type: "POST",
+				success: function(data) {
+					$('#'+ id).html(data['html']);
+					setChecklistButtonHandlers();
+				}
+			});
+		});
+		
+		$(document).off('click', '.cancelForm').on('click', '.cancelForm', function (e){
+			e.preventDefault();
+			var fullId = this.id;
+			var id = fullId.slice(-3)
+			$('#form' + id).hide();
+			$('#showFormBtn' + id).show();
+			
+		});
+	
+	}
+	
+	var state = {}
+	var title = ''
+	var path = "{% url 'home' %}"
+	history.replaceState(state, title, path);
+	var adminHomeUrls = {
+		"adminListReviews":"{% url 'adminListReviews' %}",
+		"adminReview":"{% url 'adminReview' 123 %}",
+	};
+	var userFilter = '';
+	ADMIN_HOME.init(adminHomeUrls);
+	
+	$('.checklistTab:first').click();
+	
+	$('#adminTabController').on("click", "li", function (event) {
+		event.preventDefault();
+		var clickedTabId = $(this).find('a').attr('href');	
+		if (clickedTabId == '#reviews'){
+			if (userFilter != ''){
+				ADMIN_HOME.buildReviewsTab(userFilter);
+			}
+			else{
+				ADMIN_HOME.buildReviewsTab('allUsers');
+				userFilter = '';
+			}
+		
+		}
+	});	
+    
+	
+	
+	
+	
+	
+	function deleteClItemCallback(catString, placementString){
+		return function(){
+			var url = "{% url 'deleteChecklistItem' %}";
+			json = JSON.stringify({
+				'placement': placementString,
+				'category': catString,
+				});
+			
+			$.ajax({
+				url: url,
+				data: json,
+				type: "POST",
+				success: function(data) {
+					$('#'+ catString).html(data['html']);
+					$('.deleteClItem').each(function(){
+						var idSelector = '#' + this.id;
+						var catPlacementString = idSelector.slice(16);
+						var catString = catPlacementString.substr(0,3);
+						var placementString = catPlacementString.substr(3)
+						$(document).off('click', idSelector).on('click', idSelector, deleteClItemCallback(catString, placementString));
+					})
+				}
+			});
+		}
+	}	
+	
+	$('.deleteClItem').each(function(){
+		var idSelector = '#' + this.id;
+		var catPlacementString = idSelector.slice(16);
+		var catString = catPlacementString.substr(0,3);
+		var placementString = catPlacementString.substr(3)
+
+		$(document).off('click', idSelector).on('click', idSelector, deleteClItemCallback(catString, placementString))
+	})
+	
+	
+	$(document).off('click', '#userDetailBtn').on('click', '#userDetailBtn', function (e){
+		var selectedQcrUser = $('#selectQcrUsers').val();
+		userFilter = selectedQcrUser;
+		ADMIN_HOME.buildReviewsTab(userFilter);
+	});
+	$(document).off('click', '#allReviews').on('click', '#allReviews', function (e){
+		var url = '{% url "adminListReviews" %}';
+		$.ajax({
+			url: url,
+			type: 'GET',
+			success: function(data){
+				$('#reviewDetail').html(data['html']);
+				userFilter = '';
+			}
+		});
+	});
+	$(document).off('click', '#addReview').on('click', '#addReview', function (e){	
+		e.preventDefault();
+		$.ajax({
+			url: "{% url 'getWorkPackages' %}",
+			type: "GET",
+			success: function(data) {
+				if (data['result'] == 'success'){
+					var url = "{% url 'createReview' %}";
+					location.href = url;
+				}
+				else{
+					alert('There are currently no Work Packages with free Work Units to add to a new Review.  Cannot create a new Review at this time.');
+				}
+			}
+		});
+	
+	});
+	$(document).off('click', '#addWorkPackage').on('click', '#addWorkPackage', function (e){	
+		var url = "{% url 'createWorkPackage' %}";
+		location.href = url;
+	});	
+	$(document).off('click', '#wpSearch').on('click', '#wpSearch', function (e){	
+		e.preventDefault();
+		var wpName = $('#wpName').val();
+		var state = $('#stateSelect :selected').text();
+		jsonDict = {};
+		jsonDict['name'] = wpName;
+		jsonDict['state'] = state;
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: "{% url 'searchWps' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['fail']  == 'JSON'){
+					alert('JSON DATA DID NOT TRANSMIT WITH REQUEST');
+				}
+				else{
+					$('#ptsWorkPackages').html(data['html']);
+					$('#loadWpBtn').show();
+				}
+			}
+		});
+	});	
+	$(document).off('click', '#loadWp').on('click', '#loadWp', function (e){	
+		e.preventDefault();
+		var wps = $('#wpManagerSelect').val();
+		jsonDict = {};
+		jsonDict['selection'] = wps;
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: "{% url 'addWp' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['success'] == 'True'){
+					location.reload();
+				};
+			}
+		});
+	});	
+	
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	
+	$('#qcrUsers').val([]);
+	$('#usgsUsers').val([]);
+	setManageQualityLevelButtonHandlers();
+	setManageSensorsUsedButtonHandlers();
+	setManageSensorTypesButtonHandlers();
+	setManageUserButtonHandlers();
+	setChecklistButtonHandlers();
+	
+	var tabId = '{{tabId}}';
+	
+	if (tabId){
+		if (tabId == '1'){
+			userFilter = '{{userFilter}}';
+			$('#adminTabController li a[href="#reviews"]').click();
+		}
+		if (tabId == '2'){
+			$('#adminTabController li a[href="#workPackages"]').click();
+		}
+		if (tabId == '3'){
+			$('#adminTabController li a[href="#users"]').click();
+		}
+		if (tabId == '4'){
+			$('#adminTabController li a[href="#optionDomains"]').click();
+		}
+	}
+	else{
+		$('#adminTabController li a[href="#reviews"]').click();
+	}
+
+	
+});
+</script>
+{% endblock %}

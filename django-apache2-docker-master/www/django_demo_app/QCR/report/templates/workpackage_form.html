@@ -1,0 +1,305 @@
+<div class="container">
+	<div class = "row no-gutters">
+		<div class='col-md-6'>
+			<div id = "workPackage">
+				{% if workPackage %}
+				<br>
+				<h3>Work Package Information</h3>
+				<table id = "workPackageTable">
+					<tr>
+					<td><label for="workPackageId">Work Package ID:</label></td>
+					<td><input type="text" id="workPackageId" name="workPackageId" value = "{{workPackage.workPackageId}}"></td>
+					</tr>
+					<tr>
+					<td><label for="name">Work Package Name:</label></td>
+					<td><input type="text" id="name" name="name" value = "{{ workPackage.name }}"></td>
+					</tr>
+					<tr>
+					<td><label for="type">Project Type:</label></td>
+					<td><input type="text" id="type" name="type" value = "{{ workPackage.type }}"></td>
+					</tr>
+					<tr>
+					<td><label for="vendor">Contractor:</label></td>
+					<td><input type="text" id="vendor" name="vendor" value = "{{ workPackage.vendor }}"></td>
+					</tr>
+					<tr>
+					<td><label for="poc">Point of Contact:</label></td>
+					<td><input type="text" id="poc" name="poc" value = "{{ workPackage.poc }}"></td>
+					</tr>
+					<tr>
+					<td><label for="pocEmail">POC Email:</label></td>
+					<td><input type="text" id="pocEmail" name="pocEmail" value = "{{ workPackage.pocEmail }}"></td>
+					</tr>
+					<tr>
+					<td><label for="projectSpec">Project Spec:</label></td>
+					<td>
+						<select id="projectSpec" name="projectSpec" class = 'selectWpForm'>
+						{% for LBS in projectSpecs %}
+							{% if LBS.name == projectSpec %}
+								<option selected value= "{{LBS.name}}">{{LBS.name}}</option>
+							{% else %}
+								<option value= "{{LBS.name}}">{{LBS.name}}</option>
+							{% endif %}
+						{% endfor %}
+						</select>	</td>
+					</tr>
+					<tr>
+					<td><label for="restrictions">Restricted:</label></td>
+					{% if workPackage.restrictions == 'False' %}
+					<td>
+						<select id="selectRest" class = 'selectWpForm' name="selectRest"><option value= "True">True</option><option value = "False" selected>False</option></select>
+					</td>
+					{% elif workPackage.restrictions == 'True' %}
+					<td>
+						<select id="selectRest" class = 'selectWpForm' name="selectRest"><option value= "True" selected>True</option><option value = "False">False</option></select>
+					</td>
+					{% else %}
+					<td>
+						<select id="selectRest" class = 'selectWpForm' name="selectRest"><option value= "True">True</option><option value = "False">False</option></select>
+					</td>
+					{% endif %}					
+					</tr>
+					<tr>
+					<td><label for="restrictionsDate">Restrictions Date:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='restrictionsDate'>
+								<input id = "restrictionsDateText" type='text' class="form-control" value = '{{workPackage.restrictionsDate}}'/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" ></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#restrictionsDate').datetimepicker({
+									format: 'L'
+								})								
+							});
+						</script>
+					</td>		
+					</tr>
+					<tr>
+					<td><label for="restrictionsLayer">Restricted Product Layers:</label></td>
+					{% if workPackage.restrictionsLayer == 'False' %}
+					<td>
+						<select id="selectRestLayer" class = 'selectWpForm' name="selectRestLayer"><option value= "True">True</option><option value = "False" selected>False</option></select>
+					</td>
+					{% elif workPackage.restrictionsLayer == 'True' %}
+					<td>
+						<select id="selectRestLayer" class = 'selectWpForm' name="selectRestLayer"><option value= "True" selected>True</option><option value = "False">False</option></select>
+					</td>
+					{% else %}
+					<td>
+						<select id="selectRestLayer" class = 'selectWpForm' name="selectRestLayer"><option value= "True">True</option><option value = "False">False</option></select>
+					</td>
+					{% endif %}						
+					</tr>
+					<tr>
+					<td><label for="thirdPartyQa">Third Party QA:</label></td>				
+					{% if workPackage.thirdPartyQa == 'False' %}
+					<td>
+						<select id="selectThirdPartyQa" class = 'selectWpForm' name="selectThirdPartyQa"><option value= "True">Yes</option><option value = "False" selected>No</option></select>
+					</td>
+					
+					{% elif workPackage.thirdPartyQa == 'True' %}
+					<td>
+						<select id="selectThirdPartyQa" class = 'selectWpForm' name="selectThirdPartyQa"><option value= "True" selected>Yes</option><option value = "False">No</option></select>
+					</td>
+					{% else %}
+					<td>
+						<select id="selectThirdPartyQa" class = 'selectWpForm' name="selectThirdPartyQa"><option value= "True">Yes</option><option value = "False">No</option></select>
+					</td>
+					{% endif %}							
+					</tr>
+					<tr>
+					<td><label for="thirdPartyQaBy">Third Party QA By:</label></td>
+					<td><input type="text" id="thirdPartyQaBy" name="thirdPartyQaBy" value = "{{ workPackage.thirdPartyQaBy }}"></td>
+					</tr>
+					<tr>
+					<td><label for="receivedDate">Date Received:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='receivedDate'>
+								<input id = "receivedDateText" type='text' class="form-control" value = '{{workPackage.receivedDate}}'/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" ></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#receivedDate').datetimepicker({
+									format: 'L'
+								})						
+							});
+						</script>
+					</td>		
+					</tr>
+					<tr>
+					<td><label for="assignedDate">Date Assigned:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='assignedDate'>
+								<input id = "assignedDateText" type='text' class="form-control" value = '{{workPackage.assignedDate}}'/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" ></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#assignedDate').datetimepicker({
+									format: 'L'
+								})						
+							});
+						</script>
+					</td>		
+					</tr>
+				</table>
+				<br>
+				<div id = 'projDesc' style = 'width:425'>
+					<label for = 'description'>Project Description:</label>
+					<textarea id = 'description' class = 'content'>{{ workPackage.description|safe }}</textarea>
+					<script type="text/javascript">
+						$(function () {
+							$('.content').richText();
+						});
+					</script>
+				</div>
+				{% else %}
+				<table>
+					<tr>
+					<td><label for="workPackageId">Work Package ID:</label></td>
+					<td><input type="text" id="workPackageId" name="workPackageId"></td>
+					</tr>
+					<tr>
+					<td><label for="name">Work Package Name:</label></td>
+					<td><input type="text" id="name" name="name"></td>
+					</tr>
+					<tr>
+					<td><label for="type">Project Type:</label></td>
+					<td><input type="text" id="type" name="type"></td>
+					</tr>
+					<tr>
+					<td><label for="vendor">Contractor:</label></td>
+					<td><input type="text" id="vendor" name="vendor"></td>
+					</tr>
+					<tr>
+					<td><label for="poc">Point of Contact:</label></td>
+					<td><input type="text" id="poc" name="poc"></td>
+					</tr>
+					<tr>
+					<td><label for="pocEmail">POC Email:</label></td>
+					<td><input type="text" id="pocEmail" name="pocEmail"></td>
+					</tr>
+					<tr>
+					<td><label for="projectSpec">Project Spec:</label></td>
+					<td>
+						<select id="projectSpec" name="projectSpec" class = 'selectWpForm'>
+						{% for LBS in projectSpecs %}
+							<option value= "{{LBS.name}}">{{LBS.name}}</option>
+						{% endfor %}
+						</select>						
+					</td>
+					</tr>
+					<tr>
+					<td><label for="selectRest">Restricted:</label></td>
+					<td><select id="selectRest" class = 'selectWpForm' name="selectRest"><option value= "True" selected>True</option><option value = "False">False</option></select></td>
+					</tr>
+					<tr>
+					<td><label for="selectRestLayer">Restricted Product Layers:</label></td>
+					<td><select id="selectRestLayer" class = 'selectWpForm' name="selectRestLayer"><option value= "True" selected>True</option><option value = "False">False</option></select></td>
+					</tr>
+					<tr>
+					<td><label for="restrictionsDate">Restrictions Date:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='restrictionsDate'>
+								<input id = "restrictionsDateText" type='text' class="form-control" value = ''/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#restrictionsDate').datetimepicker({
+									format: 'L'
+								});
+							});
+						</script>
+					</td>		
+					</tr>
+					<tr>
+					<td><label for="selectThirdPartyQa">Third Party QA:</label></td>
+					<td><select id="selectThirdPartyQa" class = 'selectWpForm' name="selectThirdPartyQa"><option value= "True" selected>Yes</option><option value = "False">No</option></select></td>
+					</tr>
+					<tr>
+					<td><label for="thirdPartyQaBy">Third Party QA By:</label></td>
+					<td><input type="text" id="thirdPartyQaBy" name="thirdPartyQaBy"></td>
+					</tr>
+					<tr>
+					<td><label for="receivedDate">Date Received:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='receivedDate'>
+								<input id = "receivedDateText" type='text' class="form-control" value = ''/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#receivedDate').datetimepicker({
+									format: 'L'
+								});
+							});
+						</script>
+					</td>		
+					</tr>
+					<tr>
+					<td><label for="assignedDate">Date Assigned:</label></td>	
+					<td>
+						<div class = "form-group">
+							<div class='input-group date' id='assignedDate'>
+								<input id = "assignedDateText" type='text' class="form-control" value = ''/>
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>		
+						</div>
+						<script type="text/javascript">
+							$(function () {
+								$('#assignedDate').datetimepicker({
+									format: 'L'
+								});
+							});
+						</script>
+					</td>		
+					</tr>	
+				</table>
+				<br>
+				<div id = 'projDesc' style = 'width:425'>
+					<label for = 'description'>Project Description:</label>
+					<textarea id = 'description' class = 'content' ></textarea>
+					<script type="text/javascript">
+						$(function () {
+							$('.content').richText();
+						});
+					</script>
+				</div>
+				{% endif %}
+				<br>
+				{% if updateWorkPackage %}
+				<input id = "updateWp" type=button class="btn-default" value='Update Work Package Info'>
+				<input id = "cancelWp" type=button class="btn-default" value='Cancel Update'>
+				<br>
+				<br>
+				<br>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>		

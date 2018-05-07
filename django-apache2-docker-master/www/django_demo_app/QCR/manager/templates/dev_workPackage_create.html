@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+	<div class = "row no-gutters">
+		<div class='col-md-6'>
+			<div id = 'newWorkPackage'>
+				<h3>Developer Tools - New Work Package</h3>
+				<a href="{% url 'adminHomePage' %}2">Back to Work Packages</a>
+				<br>
+				<div id = 'createWorkPackageForm'>
+					<h4>Work Package Detail</h4>
+					{% include 'workpackage_form.html' %}
+				</div><!-- createWorkPackageForm -->
+				<div id = 'workUnits'>
+					<h4>Child Work Units</h4>
+					<label for="wusToAdd">Number of Work Units to Add:</label>
+					<input type="number" id="wusToAdd" min = "0" max = "10" value = "">
+				</div><!-- workUnits -->
+				<br>
+				<div id = 'buttons'>
+					<input id = "saveWorkPackage" type="button" class="btn-default" value='Save Work Package'>	
+					<input id="clearForm" type="button" class="btn-default" value="Clear Form">
+					<br>
+					<br>
+				</div><!-- buttons -->
+			</div><!-- newWorkPackage -->
+		</div><!-- col-md-6 -->	
+	</div><!-- row no-gutters -->
+</div><!-- container -->		
+
+<script>
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+
+	$(document).off('click', '#clearForm').on('click', '#clearForm', function (e){	
+		$('#newWorkPackage').find('input:text').val('');
+		$('#wusToAdd').val(0);
+	});
+	
+	$(document).off('click', '#saveWorkPackage').on('click', '#saveWorkPackage', function (e){	
+		urls = {};
+		variables = {};
+		e.preventDefault();
+		WORK_PACKAGE.init(urls, variables)
+		json = WORK_PACKAGE.packageWpForm();
+		$.ajax({
+			url: "{% url 'createWorkPackage' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['result'] == 'success'){
+					var wpId = data['workPackageId']
+					var urlString = "{% url 'adminWpDetail' 123 %}";
+					var url = urlString.replace('123', wpId)
+					location.href = url;
+				}
+			}
+		});
+    });	
+});	
+</script>
+{% endblock %}

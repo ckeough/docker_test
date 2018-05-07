@@ -1,0 +1,27 @@
+<!--Display Classifications Table if Classified Tab Selected-->
+{% if type == 'Classified' %}
+<div id="classifications">
+	{% include "classifications_table.html" %}
+</div>
+{% endif %}
+<!--Deliverable Tabs-->
+<div id = "aggregatedWuDeliverables" class = "hideOnInit">
+	<div id = "aggregatedWuDelivTabController" class="container-fluid">
+		<ul id = "aggregatedWuDelivTabObjects" class="nav nav-tabs">
+			{% for tabId, delivId in aggWuDelivTabs.items %}
+			<li><a id = "aggregatedWuDelivLink{{tabId}}" href="#aggregatedWuDelivUpdate{{tabId}}" data-toggle="tab">{{type}} {{delivId}}</a></li>
+			{% endfor %}
+			{% if wus %}
+			<li><a id = "aggregatedWuDelivAddLink" href="#aggregatedWuDelivAdd" data-toggle="tab">+</a></li>
+			{% endif %}
+		</ul>
+		<div id = "aggregatedWuDelivTabContent" class="tab-content">
+			{% for tabId, delivId in aggWuDelivTabs.items %}
+			<div class="tab-pane" id="aggregatedWuDelivUpdate{{tabId}}" ></div>
+			{% endfor %}
+			{% if wus %}
+			<div class="tab-pane" id="aggregatedWuDelivAdd" ></div>
+			{% endif %}
+		</div>
+	</div>
+</div>

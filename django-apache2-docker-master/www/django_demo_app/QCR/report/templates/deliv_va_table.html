@@ -1,0 +1,135 @@
+{% if vaReq %}
+	{% if req10 %}
+		<table id = 'req10Table' class = 'vaReqTable'>
+			<tr id = "header">
+				<td>VA Measure Type</td><td>Landcover</td><td>Required Checkpoints</td><td>Required Value</td><td>Reported Checkpoints</td><td>Reported Value</td><td>Tested Checkpoints</td><td>Tested Value</td>
+			</tr>
+			<tr id = "cvaRow">
+				<td>Consolidated VA</td>
+				<td bgcolor = "black"></td>
+				<td><input type="number" id="cvaReqChkptsEdit" value = "{{ vaReq.consolidatedVaChkpt }}" style = "width:100px" ></td>
+				<td><input type="number" id="cvaReqValEdit" value = "{{vaReq.consolidatedVaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="cvaRepChkptsEdit" value = "{{ vaResults.reportedCvaChkpts }}" style = "width:100px"></td>
+				<td><input type="number" id="cvaRepValEdit" value = "{{vaResults.reportedCvaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="cvaTestChkptsEdit" value = "{{ vaResults.testedCvaChkpts }}" style = "width:100px"></td>
+				<td><input type="number" id="cvaTestValEdit" value = "{{vaResults.testedCvaValue}}" style = "width:100px"></td>
+			</tr>
+			<tr id = "fvaRow">
+				<td>Fundamental VA</td>
+				<td bgcolor = "black"></td>
+				<td><input type="number" id="fvaReqChkptsEdit" value = "{{ vaReq.fundamentalVaChkpt }}" style = "width:100px"></td>
+				<td><input type="number" id="fvaReqValEdit" value = "{{vaReq.fundamentalVaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="fvaRepChkptsEdit" value = "{{ vaResults.reportedFvaChkpts }}" style = "width:100px"></td>
+				<td><input type="number" id="fvaRepValEdit" value = "{{vaResults.reportedFvaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="fvaTestChkptsEdit" value = "{{ vaResults.testedFvaChkpts }}" style = "width:100px"></td>
+				<td><input type="number" id="fvaTestValEdit" value = "{{vaResults.testedFvaValue}}" style = "width:100px"></td>
+			</tr>
+			<!--  ADD SVA ROWS -->
+			{% for sva, svr in svaData %}
+				<tr id = "svaRow{{sva.id}}">
+					<td>Supplemental VA</td>
+					<td><input type="text" id="svaLandcoverEdit{{sva.id}}" value = "{{ sva.landcover }}" style = "width:100px"></td>
+					<td><input type="number" id="svaReqChkptsEdit{{sva.id}}" value = "{{sva.reqChkpts}}" style = "width:100px"></td>
+					<td><input type="number" id="svaReqValEdit{{sva.id}}" value = "{{sva.reqVal}}" style = "width:100px"></td>
+					<td><input type="number" id="svaRepChkptsEdit{{sva.id}}" value = "{{svr.reportedChkpts}}" style = "width:100px"></td>
+					<td><input type="number" id="svaRepValEdit{{sva.id}}" value = "{{svr.reportedValue}}" style = "width:100px"></td>
+					<td><input type="number" id="svaTestChkptsEdit{{sva.id}}" value = "{{svr.testedChkpts}}" style = "width:100px"></td>
+					<td><input type="number" id="svaTestValEdit{{sva.id}}" value = "{{svr.testedValue}}" style = "width:100px"></td>
+				</tr>
+			{% endfor %}
+		</table>
+		<input id = "addSvaRowEdit" type = "button" class = "btn-default" value = "Add SVA Requirement">
+	{% elif req12 %}
+		<table id = 'req12Table' class = 'vaReqTable'>
+			<tr id = "header">
+				<td>VA Measure Type</td><td>Required Checkpoints</td><td>Required Value</td><td>Reported Checkpoints</td><td>Reported Value</td><td>Tested Checkpoints</td><td>Tested Value</td>
+			</tr>
+			<tr id = "vvaRow">
+				<td>Vegetated VA</td>
+				<td><input type="number" id="vvaReqChkptsEdit" value = "{{vaReq.vegetatedVaChkpt}}"style = "width:100px" ></td>
+				<td><input type="number" id="vvaReqValEdit" value = "{{vaReq.vegetatedVaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="vvaRepChkptsEdit" value = "{{vaResults.reportedVvaChkpts}}" style = "width:100px"></td>
+				<td><input type="number" id="vvaRepValEdit" value = "{{vaResults.reportedVvaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="vvaTestChkptsEdit" value = "{{vaResults.testedVvaChkpts}}" style = "width:100px"></td>
+				<td><input type="number" id="vvaTestValEdit" value = "{{vaResults.testedVvaValue}}" style = "width:100px"></td>
+			</tr>
+			<tr id = "nvaRow">
+				<td>Non-vegetated VA</td>
+				<td><input type="number" id="nvaReqChkptsEdit" value = "{{vaReq.nonvegetatedVaChkpt}}" style = "width:100px"></td>
+				<td><input type="number" id="nvaReqValEdit" value = "{{vaReq.nonvegetatedVaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="nvaRepChkptsEdit" value = "{{vaResults.reportedNvaChkpts}}" style = "width:100px"></td>
+				<td><input type="number" id="nvaRepValEdit" value = "{{vaResults.reportedNvaValue}}" style = "width:100px"></td>
+				<td><input type="number" id="nvaTestChkptsEdit" value = "{{vaResults.testedNvaChkpts}}" style = "width:100px"></td>
+				<td><input type="number" id="nvaTestValEdit" value = "{{vaResults.testedNvaValue}}" style = "width:100px"></td>
+			</tr>
+		</table>
+
+
+	{% endif %}
+	<input id = "deleteVaReq" type = "button" class = "btn-default" value = "Delete Table">
+	<input id = "resetVaReq" type = "button" class = "btn-default" value = "Reset Form">
+	<input id = "updateVaReq" type = "button" class = "btn-default" value = "Update Values">
+{% endif %}
+<!-- need parameter to include or exclude -->
+{% if addDivs %}
+<div class = 'addReqs hideOnInit'>
+	<div id = 'addReq10' class = 'addReq hideOnInit'>
+		<table id = 'addReq10Table' class = 'addVaReqTable'>
+			<tr id = "header">
+				<td>VA Measure Type</td><td>Landcover</td><td>Required Checkpoints</td><td>Required Value</td><td>Reported Checkpoints</td><td>Reported Value</td><td>Tested Checkpoints</td><td>Tested Value</td>
+			</tr>	
+			<tr id = "cvaRow">
+				<td>Consolidated VA</td>
+				<td bgcolor = "black"></td>
+				<td><input type="number" id="cvaReqChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="cvaReqVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="cvaRepChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="cvaRepVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="cvaTestChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="cvaTestVal" value = "" style = "width:100px"></td>
+			</tr>
+			<tr id = "fvaRow">
+				<td>Fundamental VA</td>
+				<td bgcolor = "black"></td>
+				<td><input type="number" id="fvaReqChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="fvaReqVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="fvaRepChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="fvaRepVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="fvaTestChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="fvaTestVal" value = "" style = "width:100px"></td>
+			</tr>
+		</table>
+		<br>
+		<input id = "addSvaRow" type = "button" class = "btn-default" value = "Add SVA Requirement">
+
+	</div>
+	<div id = 'addReq12' class = 'addReq hideOnInit'>
+		<table id ='addReq12Table' class = 'addVaReqTable'>
+			<tr id = "header">
+				<td>VA Measure Type</td><td>Required Checkpoints</td><td>Required Value</td><td>Reported Checkpoints</td><td>Reported Value</td><td>Tested Checkpoints</td><td>Tested Value</td>
+			</tr>
+			<tr id = "vvaRow">
+				<td>Vegetated VA</td>
+				<td><input type="number" id="vvaReqChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="vvaReqVal" value = "" style = "width:100px" ></td>	
+				<td><input type="number" id="vvaRepChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="vvaRepVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="vvaTestChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="vvaTestVal" value = "" style = "width:100px"></td>
+			</tr>
+			<tr id = "nvaRow">
+				<td>Non-vegetated VA</td>
+				<td><input type="number" id="nvaReqChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="nvaReqVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="nvaRepChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="nvaRepVal" value = "" style = "width:100px"></td>
+				<td><input type="number" id="nvaTestChkpts" value = "" style = "width:100px"></td>
+				<td><input type="number" id="nvaTestVal" value = "" style = "width:100px"></td>				
+			</tr>
+		</table>
+		<br>
+	</div>
+	<input id = "addVaTableBtn" type = "button" class = "btn-default" value = "Submit">
+	<input id = "cancelVaTableBtn" type = "button" class = "btn-default" value = "Cancel">
+</div><!-- .addReq -->
+{% endif %}

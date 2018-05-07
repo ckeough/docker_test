@@ -1,0 +1,43 @@
+<div class="container">
+	<div class = "row no-gutters">
+		<div id = "vaRequirement{{vaReq.id}}">
+			<div class='col-sm-5'>
+				<br>
+				<div id = "vaRequirements">
+					<h3>Vertical Accuracy Requirements</h3>
+					<div id = 'vaTable{{vaReq.id}}'>
+					{% include 'va_table.html' with addDivs='True' %}
+					</div>
+				</div><!-- vaRequirements -->
+                <br>
+                <div id = 'wuSelector' >
+					{% if wuList %}
+                    <label for = "#wuMultiSelect">Apply VA Requirements to the Following Work Units: </label>
+                    <br>
+                    <select id = "wuMultiSelect" multiple = "multiple">
+                    {% for wu in wuList %}
+                    <option value = "Work Unit {{ wu }}">{{ wu.name }}</option>
+                    {% endfor %}
+                    </select><br>
+                    <input id = "updateLinkedWus" type = "button" class = "btn-default" value = "Update Linked WUs">
+                    {% endif %}
+				</div>
+                {% if wuSameInfo %}
+                <div id = 'wuSameInfo'>
+                    <h3>Associated Work Units</h3>
+                    <table id = "wuSameInfo"style = "border:0">
+                    {% for wu in wuSameInfo %}
+                    <tr id = "{{wu.workUnitId}}">
+                        <td style = "border:none">{{wu.name}}</td>
+                        <td style = "border:none"><input id = "removeWu{{wu.workUnitId}}" type = "button" class = "btn-default" value = "Remove"/></td>
+                    </tr>
+                    {% endfor %}
+                    </table>
+                    <br>
+                </div>
+                {% endif %}
+
+			</div><!-- VA Requirement -->
+		</div><!-- col-sm-5 -->
+	</div><!-- row -->
+</div><!-- container -->

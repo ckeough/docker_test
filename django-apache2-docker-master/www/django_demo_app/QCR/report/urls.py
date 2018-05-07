@@ -1,0 +1,95 @@
+from django.conf.urls import url
+
+from . import views
+
+urlpatterns = [
+
+
+
+	url(r'^$', views.home, name='home'),
+	url(r'^notauser/$', views.notAUser, name ='notauser'),
+	url(r'^checkCollInfoDomains/$', views.checkCollectionInfoDomains, name ='checkDomains'),
+	url(r'^collectionInfo/(?P<workUnit_id>[0-9]+)/$', views.collectionInfo, name = 'collectionInfo'),
+	url(r'^collInfoForm/$', views.collectionInfoForm, name ='ciForm'),
+	url(r'^collInfoForm/(?P<workunit_id>[0-9]+)/$', views.collectionInfoForm, name ='ciForm'),
+	url(r'^delete_collectionInfo/(?P<workunit_id>[0-9]+)/$', views.deleteCollectionInfo, name ='deleteCollInfo'),
+	url(r'^remove_collectionInfo/(?P<workunit_id>[0-9]+)/$', views.removeCollectionInfo, name ='removeCollInfo'),
+	url(r'^checkRelatedWus/(?P<workunit_id>[0-9]+)/$', views.checkRelatedWorkUnits, name = 'checkRelatedWus'),	
+	url(r'^review/(?P<review_id>[0-9]+)/$', views.review, name ='review'),
+	url(r'^workUnits/(?P<review_id>[0-9]+)/$', views.workUnits, name = 'workUnits'),
+	url(r'^workpackage/(?P<review_id>[0-9]+)/$', views.workPackage, name = 'workPackage'),
+	url(r'^create_error/(?P<deliverable_id>[0-9]+)/$', views.addError, name = 'addError'),
+	url(r'^delete_error/(?P<error_id>[0-9]+)/$', views.deleteError, name = 'deleteError'),
+	url(r'^update_error/(?P<error_id>[0-9]+)/$', views.updateError, name='updateError'),
+	url(r'^get_error/(?P<error_id>[0-9]+)/$', views.getError, name='getError'),
+	url(r'^get_errors/(?P<deliverable_id>[0-9]+)/$', views.getErrorsTable, name = 'getErrors'),
+	url(r'^get_errors/(?P<deliverable_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.getErrorsTable, name='getErrorsAgg'),
+	url(r'^update_errors/(?P<deliverable_id>[0-9]+)/$', views.updateErrorsTable, name = 'updateErrors'),
+	url(r'^update_errors/(?P<deliverable_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.updateErrorsTable, name='updateErrorsAgg'),
+	url(r'^populate_error_subtype/$', views.populateErrorSubtype, name='populateErrorSubType'),
+	url(r'^delete_images/$', views.deleteErrorImages, name='deleteImages'),
+	
+	##main deliverables tabs
+	url(r'^deliverables/(?P<workUnit_id>[0-9]+)/$', views.deliverables, name = 'deliverables'),
+	url(r'^metadata/$', views.metadataTab, name = 'metadataTab'),
+	url(r'^pointcloud/(?P<review_id>[0-9]+)/$', views.pointcloudTab, name = 'pointcloudTab'),
+	url(r'^demSubtabs/$', views.demSubtabs, name = 'demSubtabs'),
+	
+	##generic deliverables
+	url(r'^delivForm/(?P<review_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.delivForm, name ='delivForm'),
+	url(r'^delivForm/(?P<workunit_id>[0-9]+)/$', views.delivForm, name ='delivForm'),
+	url(r'^delivCreate/(?P<workunit_id>[0-9]+)/$', views.delivCreate, name ='delivCreate'),
+	url(r'^delivCreate/$', views.delivCreate, name ='delivCreateNoWu'),
+	url(r'^deliverablesByCategory/(?P<workUnit_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.deliverablesByCategory, name = 'deliverablesByCategory'),
+	url(r'^deleteDeliv/(?P<deliv_id>[0-9]+)/$', views.deleteDeliv, name='deleteDeliv'),
+	url(r'^updateDeliv/(?P<deliv_id>[0-9]+)/$', views.updateDeliv, name='updateDeliv'),
+	url(r'^checkRemainingWu/(?P<deliv_id>[0-9]+)/$', views.checkRemainingWu, name='checkRemainingWu'),
+	url(r'^removeGenericDelivWu/(?P<deliv_id>[0-9]+)/(?P<workunit_id>[0-9]+)/$', views.removeGenericDelivFromWu, name='removeGenericDelivWu'),
+	url(r'^delivTabUpdate/$', views.delivTabUpdate, name = 'delivTabUpdate'),
+	
+	##aggregated wu deliverables
+	url(r'^checkRemainingWorkUnits/(?P<tab_id>[0-9]+)/$', views.checkRemainingWorkUnits, name = 'checkRemainingWorkUnits'),
+	url(r'^removeDelivFromWu/(?P<workunit_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.removeDelivFromWu, name = 'removeDelivFromWu'),
+	url(r'^createAggWuDeliv/(?P<review_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.createAggregatedWuDeliverable, name = 'createAggregatedWuDeliverable'),
+	url(r'^aggWuDeliv/(?P<tab_id>[0-9]+)/(?P<review_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.aggregatedWuDeliverableTab, name = 'aggregatedWuDeliverableTab'),
+	url(r'^aggWuDelivTabs/(?P<review_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.aggregatedWuDeliverableTabs, name = 'aggregatedWuDeliverableTabs'),
+	url(r'^deleteAggWuDeliv/(?P<tab_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.deleteAggregatedWuDeliverable, name = 'deleteAggregatedWuDeliverable'),
+	url(r'^getDelivProjectSpec/(?P<tab_id>[0-9]+)/$', views.getProjectSpec, name ='getDelivProjectSpec'),
+	url(r'^addErrorAggWuDeliv/(?P<tab_id>[0-9]+)/$', views.addErrorAggregatedWuDeliv, name = 'addErrorAggregatedWuDeliv'),
+	url(r'^getDelivVaTable/(?P<tab_id>[0-9]+)/$', views.getDelivVaTable, name ='getDelivVaTable'),
+	url(r'^deleteDelivVaTable/(?P<tab_id>[0-9]+)/$', views.deleteDelivVaTable, name ='deleteDelivVaTable'),
+	url(r'^updateDelivVaTable/(?P<tab_id>[0-9]+)/$', views.updateDelivVaTable, name ='updateDelivVaTable'),
+	url(r'^deleteAggWuDelivError/(?P<error_id>[0-9]+)/(?P<category_id>[0-9]+)/$', views.deleteError, name = 'deleteAggWuDelivError'),
+	url(r'^demForm/(?P<review_id>[0-9]+)/$', views.demForm, name = 'demForm'),
+	url(r'^swathForm/(?P<review_id>[0-9]+)/$', views.swathForm, name='swathForm'),
+	url(r'^classifiedForm/(?P<review_id>[0-9]+)/$', views.classifiedForm, name='classifiedForm'),
+	url(r'^getClassificationsTable/(?P<reviewId>[0-9]+)/$', views.getClassificationsTable, name='getClassificationsTable'),
+	url(r'^deleteClassifications/$', views.deleteClassifications, name ='deleteClassifications'),
+	url(r'^updateClassifications/(?P<reviewId>[0-9]+)/$', views.updateClassifications, name='updateClassifications'),
+	
+	## VA Requirements urls
+	url(r'^vaReqSubtabs/(?P<review_id>[0-9]+)/$', views.vaReqSubtabs, name = 'vaReqSubtabs'),
+	url(r'^addVaReqForm/(?P<review_id>[0-9]+)/$', views.addVaReqForm, name = 'addVaReqForm'),
+	url(r'^createVaReq/(?P<workunit_id>[0-9]+)/$', views.createVaReq, name = 'createVaReq'),
+	url(r'^vaReqTab/(?P<vaReq_id>[0-9]+)/$', views.getVaReqTab, name = 'vaReqTab'),
+	url(r'^linkVaWus/(?P<vaReq_id>[0-9]+)/$', views.linkVaWus, name='linkVaWus'),
+	url(r'^checkRemainingWus/(?P<vaReq_id>[0-9]+)/$', views.checkRemainingWuVA, name='checkRemainingWus'),
+	url(r'^removeVaReq/(?P<workunit_id>[0-9]+)/$', views.removeVaReq, name='removeVaReq'),
+	url(r'^deleteVaTable/(?P<vaReq_id>[0-9]+)/$', views.deleteVaTable, name ='deleteVaTable'),
+	url(r'^getVaTable/(?P<vaReq_id>[0-9]+)/$', views.getVaTable, name ='getVaTable'),
+	url(r'^addVaTable/(?P<workUnit_id>[0-9]+)/$', views.addVaTable, name ='addVaTable'),
+	url(r'^getNextSva/$', views.getNextSva, name ='getNextSva'),
+	url(r'^svaExists/(?P<sva_id>[0-9]+)/$', views.svaExists, name = 'svaExists'),
+	url(r'^updateVaTable/(?P<vaReq_id>[0-9]+)/$', views.updateVaTable, name ='updateVaTable'),
+	url(r'^getVaReqsProjectSpec/(?P<workUnit_id>[0-9]+)/$', views.getProjectSpec, name ='getVaReqsProjectSpec'),
+	##Reports urls
+	url(r'^reports/(?P<review_id>[0-9]+)/$', views.reports, name = 'reports'),
+	url(r'^getGeojson/(?P<review_id>[0-9]+)/$', views.getGeojson, name = 'getGeojson'),
+	url(r'^error_map/(?P<review_id>[0-9]+)/$', views.errorMapPage, name = 'errorMapPage'),
+	url(r'^build_error_geopackage/(?P<review_id>[0-9]+)/$', views.buildErrorGeopackage, name = 'buildErrorGeopackage'),
+	url(r'^contractor_reports/(?P<review_id>[0-9]+)/$', views.contractorReports, name = 'contractorReports'),
+	url(r'^new_contractor_report/$', views.newContractorReport, name = 'newContractorReport'),
+	url(r'^new_contractor_report/(?P<review_id>[0-9]+)/$', views.newContractorReport, name = 'newContractorReport'),
+	url(r'^retrieve_saved_report/(?P<report_id>[0-9]+)/$', views.retrieveSavedReport, name = 'retrieveSavedReport'),
+	url(r'^delete_report/(?P<review_id>[0-9]+)/(?P<report_id>[0-9]+)/$', views.deleteReport, name = 'deleteReport'),
+]

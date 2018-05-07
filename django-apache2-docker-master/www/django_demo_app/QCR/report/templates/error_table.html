@@ -1,0 +1,40 @@
+<table id="errorstable{{ id }}" class="errortable">
+    <tr>
+        <th id="0" class="errorTableHeader">ID</th>
+        <th id="1" class="errorTableHeader">Type</th>
+        <th id="2" class="errorTableHeader">Subtype</th>
+        <th id="3" class="errorTableHeader">Description</th>
+        <th id="4" class="errorTableHeader">Location</th>
+        <th id="5" class="errorTableHeader">Image</th>
+        <th id="6" class="errorTableHeader">Resolved</th>
+    </tr>
+{% for error in errors %}
+    <tr>
+        <td id="modal{{error.id}}" class="modalLink">{{error.id}}</td>
+        <td>{{error.errorType}}</td>
+        <td>{{error.errorSubtype}}</td>
+        <td class="errorDescription">{{error.description}}</td>
+        <td>{{error.location}}</td>
+        <td id="errorImg{{error.id}}">
+            {% with error.errorimage_set.all|first as image %}
+			{% if image %}
+            <img src = "{{image.picture.url}}" class="errorimg">
+            {% else %}
+			<p>No Associated Image</p>
+			{% endif %}
+			{% endwith %}
+        </td>
+        <td>
+            <select id="errorStatus{{error.id}}" name="errorStatus{{error.id}}" class="errorStatus{{id}}">
+                {% if error.resolved %}
+                <option value= "True" selected>True</option>
+                <option value = "False">False</option>
+                {% else %}
+                <option value= "True">True</option>
+                <option value = "False" selected>False</option>
+                {% endif %}
+            </select>
+        </td>
+    </tr>
+{% endfor %}
+</table>

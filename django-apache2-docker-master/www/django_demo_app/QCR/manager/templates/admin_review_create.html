@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+	<div class = "row no-gutters">
+		<div class='col-md-6'>
+			<div class = 'headingNoId'>
+				<h3>Add New Review</h3>
+				<a href="{% url 'home' %}">Back to reviews</a>
+			</div>
+			<br>
+			<div id = 'rvwName'>
+				<label for = 'name'>Enter Review Name:</label>
+				<input id = 'name' type = 'text'>
+			</div>
+			<div id = 'assignUser'>
+				<br>
+				<label for="userSelect">Assign Review to User:</label>
+				<br>
+				<select id="userSelect">
+				{% for user in users %}
+					<option value= "{{user}}">{{user}}</option>
+				{% endfor %}
+				</select>
+			</div>
+			<div id = 'newReview'>
+				<br>
+				<label for="workPackagesSelect">Select a Work Package to add Work Units from:</label>
+				<br>
+				<select id="workPackageSelect">
+				{% for wp in wps %}
+					<option value= "workPackage{{wp.workPackageId}}">Work Package {{wp.workPackageId}}</option>
+				{% endfor %}
+				</select>
+			</div><!-- newReview-->
+			<br>
+			<label for="newReviewSelectWorkUnits">Select Work Units to Add to Review:</label>
+			<div id = 'newReviewSelectWorkUnits' class = 'hideOnInit'>
+				<select multiple id="workUnitSelectJsonFill">
+				</select>
+				<br>
+				<br>
+				<input id="saveReview" type="button" class="btn-default" value="Save Review">		
+			</div>
+		</div><!-- col-md-6 -->	
+	</div><!-- row no-gutters -->
+</div><!-- container -->	
+<script>
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	
+	function populateWorkUnitsDropdown(){
+		$('#workUnitSelectJsonFill').empty();
+		var wpId = $('#workPackageSelect').val().substring(11);
+		var jsonDict = {}
+		jsonDict['workPackageId'] = wpId;
+		jsonDict['mode'] = 'workUnits'
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: "{% url 'populateReviewWuSelect' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['result'] == 'success'){
+					var wuListString = data['wus'].toString();
+					var wuList = wuListString.split(',');
+					$.each(wuList, function(){
+						values = this;
+						vals = values.split(':');
+						
+						$('#workUnitSelectJsonFill').append('<option value = "' + vals[0] + '">'+ vals[1] + '</option>')
+					})
+					$('#newReviewSelectWorkUnits').show();
+				}
+			}
+		});
+	
+	};
+	populateWorkUnitsDropdown();
+	$(document).off('change', '#workPackageSelect').on('change', '#workPackageSelect', function (e){	
+		e.preventDefault();
+		populateWorkUnitsDropdown();
+    });	
+
+	$(document).off('click', '#saveReview').on('click', '#saveReview', function (e){
+		
+		var selectedWus = $("#workUnitSelectJsonFill").val();
+		var selectedUser = $("#userSelect").val();
+		var name = $('#name').val();
+		var workPackage = $('#workPackageSelect').val().substring(11);
+		var jsonDict = {};
+		jsonDict['workPackage'] = workPackage;
+		jsonDict['wus'] = selectedWus;
+		jsonDict['user'] = selectedUser;
+		jsonDict['name'] = name;
+		jsonDict['mode'] = 'create';
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: "{% url 'createReview' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['result'] == 'success'){
+					var urlString = "{% url 'adminReview' 123 %}";
+					var url = urlString.replace('123', data['review']);
+					location.href = url;
+				}
+			}
+		});
+	});
+});
+</script>
+{% endblock %}	

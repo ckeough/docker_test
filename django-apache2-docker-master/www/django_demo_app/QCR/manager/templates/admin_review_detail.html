@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% block title %}<title>Review Detail - Admin Mode</title>{% endblock %}
+{% block body %}
+<div id = 'container-fluid'>
+	<div id = 'row'>
+		<div class='col-md-6'>
+			<div id = 'reviewDetail'>
+				<h3>{{review.name}}</h3>
+				{% if userFilter %}
+				<a href="#" id = 'backAssignedUser' style = 'font-size:15;padding-left:10'>Back to reviews for {{assignedUser}}</a>			
+				{% else %}
+				<a href="#" id = 'backAllUsers' style = 'font-size:15;padding-left:10'>Back to reviews for all users</a>
+				{% endif %}
+				<br>
+				<hr>
+				<label>Review Detail Links:</label>
+				<ul>
+				<li><a href="{% url 'review' review.id %}" style = 'font-size:15;padding-left:10'>View Details/Perform Updates</a></li>
+				<li><a href="{% url 'reports' review.id %}" id = 'adminReports' style = 'font-size:15;padding-left:10'>Reports</a></li>
+				</ul>
+				<br>
+				<hr>
+				<div id = 'updateName'>
+					<label for = 'name'>Update Review Name:</div>
+					<input id = 'name' type = 'text' value = '{{review.name}}'>
+				</div>
+				<br>
+				<hr>
+				<div id = 'assignedTo'>
+					<label for = 'user'>Assigned To:</label>
+					<select id="user">
+					{% for user in users %}
+						{% if user.username == assignedUser %}
+							<option selected value= "{{user.username}}">{{user.username}}</option>
+						{% else %}
+							<option value= "{{user.username}}">{{user.username}}</option>
+						{% endif %}
+					{% endfor %}
+					</select>
+				</div>
+				<br>
+				<hr>
+				{% if relWus %}
+				<div id = 'selectedWus'>
+					<label for = 'reviewRelWus'>Review {{id}} - Associated Work Units (Work Package {{selectedWp.workPackageId}})</label>
+					<table id = 'reviewRelWus' style='border:none;font-size:14px;'>
+					{% for relWu in relWus %}
+						<tr id = 'workUnitRow{{relWu.workUnitId}}' class = 'workUnitRow'><td style='border:none;width:200px;padding-bottom:1em' align='left'>{{relWu.name}}</td><td style='border:none;width:150px;padding-bottom:1em' align='right'><a id = "removeWu{{relWu.workUnitId}}" href='#'>Remove from Review<a></td></tr>
+					{% endfor %}
+					</table>
+					<br>
+				</div>
+				{% else %}
+				<p>There are currently no Work Units associated with this Review</p>
+				{% endif %}
+				<br>
+				<hr>
+				{% if wps %}
+				<label for="workPackagesSelect"><p style = 'margin-bottom:2px'>Select a Work Package to add Work Units from:</p><p style = 'font-size:12px;margin-top:2px'>(Associated Work Units from other Work Packages will be removed when Review is saved)</p></label>
+				<br>
+				<select id="workPackageSelect">
+				{% for wp in wps %}
+					{% if wp.workPackageId == selectedWp.workPackageId %}
+						<option selected value= "workPackage{{wp.workPackageId}}">Work Package {{wp.workPackageId}}</option>
+					{% else %}
+						<option value= "workPackage{{wp.workPackageId}}">Work Package {{wp.workPackageId}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+				{% else %}
+				<p>All Work Units belonging to existing Work Packages have already been assigned to Review objects.</p>				
+				{% endif %}
+				<br>
+				<div id = 'rvwWuSelect'>
+					<br>
+					<label>Select Work Units to Add to Review:</label>
+					<br>
+					{% if workUnits %}
+					<select multiple id="workUnitSelectTemplateFill" class = 'rvwWuSelect'>
+						{% for wu in workUnits %}
+							<option value= "workUnit{{wu.workUnitId}}">{{wu.name}}</option>
+						{% endfor %}
+					</select>
+					{% endif %}
+					<select multiple id="workUnitSelectJsonFill" class = 'rvwWuSelect'>
+					</select>
+					<br>
+					<hr>
+				</div><!-- rwvWuSelect -->
+				<table id = 'rvwDetailButtons' style = "border:0">
+					<tr>
+					<td id = 'saveReview' style = "border:0;vertical-align:top"><input id = "btnSaveReview" type = "button" class="btn-default" value = "Save Review"></td>
+					<td id = 'deleteReview' style = "border:0">
+						<input id = "btnDelReview" type = "submit" class="btn-default" style = "font-weight:normal" value = "Delete Review">
+					</td>
+					</tr>
+				</table><!-- rvwDetailButtons -->
+			</div><!-- reviewDetail -->
+		</div>
+	</div>
+</div>
+<script>
+var reviewId = '{{id}}';
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	
+	function populateWorkUnitsDropdown(){
+		var wpId = '';
+		if (typeof $('#workPackageSelect').val() == 'undefined' && $('#user').val() == '{{assignedUser}}'){
+			$('#rvwWuSelect').hide();
+		}
+
+		else{
+			var wpId = $('#workPackageSelect').val().substring(11);
+			var jsonDict = {}
+			jsonDict['workPackageId'] = wpId;
+			var json = JSON.stringify(jsonDict);
+			$.ajax({
+				url: "{% url 'populateReviewWuSelect' %}",
+				type: "POST",
+				data: json,
+				success: function(data) {
+					if (data['result'] == 'success'){
+						$('#workUnitSelectTemplateFill').empty();
+						$('#workUnitSelectTemplateFill').hide();
+						$('#workUnitSelectJsonFill').empty();
+						var wuListString = data['wus'].toString();
+						var wuList = wuListString.split(',');
+						$.each(wuList, function(){
+							values = this;
+							vals = values.split(':');
+							$('#workUnitSelectJsonFill').append('<option value = "' + vals[0] + '">'+ vals[1] + '</option>')
+						})
+						$('#workUnitSelectJsonFill').show();
+					}
+				}
+			});
+		}
+	};
+
+	function removeWorkUnitCallback(wuId){
+		return function(){
+			var jsonData = {};
+			jsonData['workUnitId'] = wuId;
+			var json = JSON.stringify(jsonData);
+			var urlString = "{% url 'removeWorkUnit' %}"
+			$.ajax({
+				url: urlString,
+				type: "POST",
+				data: json,
+				success: function(data) {
+					if (data['result'] == 'success'){
+						location.reload();
+					}
+				}
+			});
+		}
+	}	
+	
+	$('#workUnitSelectJsonFill').hide();
+	$('#btnSaveReview').prop('disabled', true);
+	populateWorkUnitsDropdown();	
+	$('.workUnitRow').each(function(){	
+		wuId = $(this).attr('id').substring(11);
+		$(this).click(removeWorkUnitCallback(wuId));
+	});
+
+	$(document).off('change', '#name').on('change', '#name', function (e){	
+		e.preventDefault();
+		$('#btnSaveReview').prop('disabled', false);
+    });	
+	
+	$(document).off('change', '#user').on('change', '#user', function (e){	
+		e.preventDefault();
+		if ($('#user').val() != '{{assignedUser}}'){
+			$('#btnSaveReview').prop('disabled', false);
+		}
+		else{
+			$('#btnSaveReview').prop('disabled', true);
+		}
+    });
+	
+	$(document).off('change', '#workPackageSelect').on('change', '#workPackageSelect', function (e){	
+		e.preventDefault();
+		$('#btnSaveReview').prop('disabled', true);
+		$('#cancelUpdateCollectionInfo').css('opacity', 0.5);
+		populateWorkUnitsDropdown();
+    });	
+	
+	$(document).off('change', '#workUnitSelectTemplateFill').on('change', '#workUnitSelectTemplateFill', function (e){	
+		e.preventDefault();
+		$('#btnSaveReview').prop('disabled', true);
+		$('#cancelUpdateCollectionInfo').css('opacity', 0.5);
+		selected = $('#workUnitSelectTemplateFill').val()
+		if (selected.length > 0){
+			$('#btnSaveReview').prop('disabled', false);
+			$('#cancelUpdateCollectionInfo').css('opacity', 1);
+		}
+    });	
+	
+	$(document).off('change', '#workUnitSelectJsonFill').on('change', '#workUnitSelectJsonFill', function (e){	
+		e.preventDefault();
+		$('#btnSaveReview').prop('disabled', true);
+		$('#cancelUpdateCollectionInfo').css('opacity', 0.5);
+		selected = $('#workUnitSelectJsonFill').val()
+		if (selected.length > 0){
+			$('#btnSaveReview').prop('disabled', false);
+			$('#cancelUpdateCollectionInfo').css('opacity', 1);
+		}
+    });	
+	
+	$(document).off('click', '#btnDelReview').on('click', '#btnDelReview', function (e){
+		e.preventDefault();
+		$.ajax({
+			url: "{% url 'deleteReview' id %}",
+			type: "POST",
+			success: function(data) {
+				if (data['result'] == 'success'){
+					location.href = "{% url 'home' %}";
+				}
+			}
+		});
+	
+	});
+	
+	$(document).off('click', '#btnSaveReview').on('click', '#btnSaveReview', function (e){
+		e.preventDefault();
+		var name = $("#name").val();
+		var user = $("#user").val();
+		var selWpVal = $("#workPackageSelect").val();
+		var selectedWp;
+		if (selWpVal !== ''){;
+			selectedWp = $("#workPackageSelect").val().substring(11);
+		}
+		else{
+			selectedWp = '';
+		}
+		var selectedTemplateWus = $("#workUnitSelectTemplateFill").val();
+		var selectedJsonWus = $("#workUnitSelectJsonFill").val();
+		var selectedWus = [];
+		if (selectedTemplateWus != ''){
+			selectedWus = selectedTemplateWus;
+		}
+		if (selectedJsonWus != ''){
+			selectedWus = selectedJsonWus;
+		}
+		var jsonDict = {};
+		jsonDict['name'] = name;
+		jsonDict['user'] = user;
+		jsonDict['wpId'] = selectedWp;
+		jsonDict['wus'] = selectedWus;
+		jsonDict['reviewId'] = reviewId;
+		jsonDict['mode'] = 'edit ';
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: "{% url 'adminReviewEdit' %}",
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['result'] == 'success'){
+					location.reload();
+				}
+			}
+		});
+	});
+	$(document).off('click', '#backAllUsers').on('click', '#backAllUsers', function (e){
+		e.preventDefault()
+		location.href = "{% url 'home' %}";
+	});
+	$(document).off('click', '#backAssignedUser').on('click', '#backAssignedUser', function (e){
+		e.preventDefault()
+		location.href = "{% url 'adminHomePage' %}1/{{assignedUser}}";
+	});
+});
+</script>
+{% endblock %}

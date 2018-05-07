@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% block title %}<title>{{review.name}}</title>{% endblock %}
+{% block body %}
+<body>
+	<div class = 'container-fluid'>
+		<div class = 'row' style = 'display:table;width:100%'>
+			<div class = 'col-md-6' style = 'display:inline-block;float:none;vertical-align:bottom'>
+				<h2>{{review.name}}</h2>
+			</div>
+			<div class = 'col-md-6' style = 'display:inline-block;float:none;vertical-align:bottom;text-align:right;'>
+				<label><a id = 'checklistLink' href = '#'>Review Progress Checklist</a></label>
+				<div id="checklistModal{{review.id}}" class="modal" style = 'z-index:3'>
+					<div id = 'modalContent{{review.id}}' class="modal-content" style = 'width:85%'>
+						
+					</div>			
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div id = "mainTabController" class="container-fluid hideOnInit">
+			<ul id = "mainTabs" class="nav nav-tabs">
+				<li><a href="#wpInfo" data-toggle="tab">Work Package Information</a></li>
+				<li><a href="#collInfo" data-toggle="tab">Collection Information</a></li>
+				<li><a href="#vaReqs" data-toggle="tab">VA Requirements</a></li>
+				<li><a href="#dem" data-toggle="tab">DEM</a></li>
+				<li><a href="#metadata" data-toggle="tab">Metadata</a></li>	
+				<li><a href="#pointcloud" data-toggle="tab">Pointcloud</a></li>
+				<li><a href="#other" data-toggle="tab">Other</a></li>
+				<li><a href="#deliverables" data-toggle="tab">Deliverables</a></li>
+			</ul>
+			<div class="tab-content">
+				<!-- MAIN WORK PACKAGE TAB -->
+				<!-- Main Work Package info tab pain content. -->
+				<div class="tab-pane" id="wpInfo"></div>
+				<!-- Work Units/Collection Info Tab -->
+				<div class="tab-pane" id="collInfo"></div>
+				<!-- Vertical Accuracy Requirements tab -->
+				<div class="tab-pane" id="vaReqs"></div>
+				<!-- DEM Tab -->
+				<div class="tab-pane" id="dem"></div>
+				<!-- Metadata Tab -->
+				<div class="tab-pane" id="metadata"></div>
+				<!-- Pointcloud Tab -->
+				<div class="tab-pane" id="pointcloud"></div>
+				<!-- Other Tab -->
+				<div class="tab-pane" id="other"></div>
+				<!-- Deliverables Tab -->
+				<div class="tab-pane" id="deliverables"></div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<!-- Add JS/JQuery/Ajax Scripts that use Django template tags here -->
+<script>
+//Global 'reviewId' variable gets passed into the init method for each object
+var vars = {
+	"reviewId":"{{ review.id }}",
+};
+//URL dicts with the URLs needed by each object type get passed into the init methods for 
+//each object type
+var workPackageUrls = {
+	"review":"{% url 'review' 123 %}",
+	"workPackage":"{% url 'workPackage' 123 %}"
+};
+
+var verticalAccuracyUrls = {
+	"review":"{% url 'review' 123 %}",
+	"vaReqSubtabs":"{% url 'vaReqSubtabs' 123 %}",
+	"addVaReqForm":"{% url 'addVaReqForm' 123 %}",
+	"createVaReq":"{% url 'createVaReq' 123 %}",
+	"linkVaWus":"{% url 'linkVaWus' 123 %}",
+	"checkRemainingWus":"{% url 'checkRemainingWus' 123 %}",
+	"removeVaReq":"{% url 'removeVaReq' 123 %}",
+	"vaReqTab":"{% url 'vaReqTab' 123 %}"
+};
+
+var collInfoUrls = {
+	"checkDomains":"{% url 'checkDomains' %}",
+	"collectionInfo":"{% url 'collectionInfo' 123 %}",
+	"review":"{% url 'review' 123 %}",
+	"ciForm":"{% url 'ciForm' %}",
+	"removeCollInfo":"{% url 'removeCollInfo' 123 %}",
+	"deleteCollInfo":"{% url 'deleteCollInfo' 123 %}",
+	"checkRelatedWus":"{% url 'checkRelatedWus' 123 %}",
+	"getProjectSpec":"{% url 'getVaReqsProjectSpec' 123 %}",
+	"addVaTable":"{% url 'addVaTable' 123 %}",
+};
+
+var deliverableUrls = {
+	"review":"{% url 'review' 123 %}",
+	"deliverables":"{% url 'deliverables' 123 %}",
+	"delivForm":"{% url 'delivForm' 123 %}",
+	"createDeliv":"{% url 'delivCreate' 123 %}",
+	"updateDeliv":"{% url 'delivTabUpdate'%}"
+};
+
+var demUrls = {
+	"review":"{% url 'review' 123 %}",
+	"demSubtabs":"{% url 'demSubtabs' %}",
+};
+
+var metadataUrls = {
+	"review":"{% url 'review' 123 %}",
+	"metadataTab":"{% url 'metadataTab' %}"
+};
+
+var pointcloudUrls = {
+	"review":"{% url 'review' 123 %}",
+	"pointcloudTab":"{% url 'pointcloudTab' 123 %}"
+};
+
+var functionsObjectUrls = {
+	"review":"{% url 'review' 123 %}",
+	"workUnits":"{% url 'workUnits' 123 %}",
+	"getDelivVaTable":"{% url 'getDelivVaTable' 123 %}",
+	"updateDelivVaTable":"{% url 'updateDelivVaTable' 123 %}",
+	"deleteDelivVaTable":"{% url 'deleteDelivVaTable' 123 %}",
+	"getVaTable":"{% url 'getVaTable' 123 %}",
+	"updateVaTable":"{% url 'updateVaTable' 123 %}",
+	"deleteVaTable":"{% url 'deleteVaTable' 123 %}",
+	"getNextSva":"{% url 'getNextSva' %}",
+	"svaExists":"{% url 'svaExists' 123 %}",
+	"addError":"{% url 'addError' 123 %}",
+	"addErrorAggregatedWuDeliverable":"{% url 'addErrorAggregatedWuDeliv' 123%}",
+	"deleteError":"{% url 'deleteError' 123 %}",
+	"updateError":"{% url 'updateError' 123 %}",
+	"getError":"{% url 'getError' 123 %}",
+	"getErrors":"{% url 'getErrors' 123 %}",
+	"getErrorsAgg":"{% url 'getErrorsAgg' 123 456 %}",
+	"updateErrors":"{% url 'updateErrors' 123 %}",
+	"updateErrorsAgg":"{% url 'updateErrorsAgg' 123 456 %}",
+	"populateErrorSubType":"{% url 'populateErrorSubType' %}",
+	"deleteImages":"{% url 'deleteImages' %}",
+	"getClassificationsTable":"{% url 'getClassificationsTable' 123 %}",
+	"deleteClassifications":"{% url 'deleteClassifications' %}",
+	"updateClassifications":"{% url 'updateClassifications' 123 %}",
+};
+
+var genericDeliverableUrls = {
+	"review":"{% url 'review' 123 %}",
+	"workUnits":"{% url 'workUnits' 123 %}",
+	"deliverablesByCategory":"{% url 'deliverablesByCategory' 123 456 %}",
+	"delivForm":"{% url 'delivForm' 123 456 %}",
+	"createDelivNoWu":"{% url 'delivCreateNoWu' %}",
+	"createDelivWu":"{% url 'delivCreate' 123 %}",
+	"deleteDeliv":"{% url 'deleteDeliv' 123 %}",
+	"updateDeliv":"{% url 'updateDeliv' 123 %}",
+	"checkRemainingWu":"{% url 'checkRemainingWu' 123 %}",
+	"removeGenericDelivWu":"{% url 'removeGenericDelivWu' 123 456 %}"
+};
+
+var aggregatedWuDelivUrls = {
+	"review":"{% url 'review' 123 %}",
+	"deleteError":"{% url 'deleteAggWuDelivError' 123 456 %}",
+	"demForm":"{% url 'demForm' 123 %}",
+	"swathForm":"{% url 'swathForm' 123 %}",
+	"classifiedForm":"{% url 'classifiedForm' 123 %}",
+	"checkRemainingWorkUnits":"{% url 'checkRemainingWorkUnits' 123 %}",
+	"removeDelivFromWu":"{% url 'removeDelivFromWu' 123 456 %}",
+	"createAggregatedWuDeliv":"{% url 'createAggregatedWuDeliverable' 123 456 %}",
+	"aggregatedWuDeliverableTab":"{% url 'aggregatedWuDeliverableTab' 123 456 789 %}",
+	"aggregatedWuDeliverableTabs":"{% url 'aggregatedWuDeliverableTabs' 123 456 %}",
+	"deleteAggregatedWuDeliverable":"{% url 'deleteAggregatedWuDeliverable' 123 456 %}",
+	"getDelivProjectSpec":"{% url 'getDelivProjectSpec' 123 %}"	
+};
+
+$(document).ready(function(){
+	FUNCTIONS.init(functionsObjectUrls, vars);
+	GENERIC.init(genericDeliverableUrls, vars);
+	AGGREGATE_WU_DELIV.init(aggregatedWuDelivUrls, vars);
+	
+
+	$(document).off('click', '#checklistLink').on('click', '#checklistLink', function(){
+
+		//method returning modal content as html
+		
+		url = '{% url "getChecklistModal" review.id %}'
+		$.ajax({
+			url: url,
+			type: "GET",
+			success: function(data) {
+				$('#modalContent{{review.id}}').html(data['html'])
+				
+				$('input[type="checkbox"]').each(function (){
+					if($(this).hasClass('checked')){
+						var selector = '#' + this.id;
+						$(selector).prop('checked', true);
+					}
+				});
+			}
+		});
+		
+		modalSelector = 'checklistModal{{review.id}}';
+		var modal = document.getElementById(modalSelector);
+		var span = document.getElementsByClassName("closeModal");
+        modal.style.display = "block";
+		$(document).off('click', '.closeModal').on('click','.closeModal', function(){
+			modal.style.display = "none";
+
+		});
+		window.onclick = function(event){
+			if (event.target == modal){
+				modal.style.display = "none";
+			}
+		}
+		
+		
+    });
+
+	
+	$(document).off('change', '#checklistModal{{review.id}} :input').on('change', '#checklistModal{{review.id}} :input', function(e){
+		e.preventDefault();
+		
+		var url = '{% url "updateChecklist" %}';
+		var json;
+		var id = this.id;
+		var modId = id.slice(4)
+		var cat = modId.substr(0,3)
+		var placement = modId.slice(3)
+		if (this.checked == true){
+			json = JSON.stringify({
+				'review':'{{review.id}}',
+				'category': cat,
+				'placement':placement,
+				'complete':'True'
+			})
+		}
+		else{
+			json = JSON.stringify({
+				'review':'{{review.id}}',
+				'category': cat,
+				'placement':placement,
+				'complete':'False'
+			})
+		}
+		$.ajax({
+			url: url,
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['success'] == 'true'){
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		});
+	});
+	
+	$('#mainTabs').on("click", "li", function (event) {
+		//Determine previous main tab in order to erase it's HTML for reuse of elements/tags in the new tab content
+		var previousMainTabId = $("#mainTabs .active").find('a').attr('href');
+		if (previousMainTabId){
+			if (previousMainTabId !== '#wpInfo'){
+				$(previousMainTabId).html('');
+			}
+		}
+		//Determine clicked tab
+		var clickedTabId = $(this).find('a').attr('href');	
+		//Build tab pane content
+		if (clickedTabId == '#wpInfo'){
+			WORK_PACKAGE.init(workPackageUrls, vars);
+			WORK_PACKAGE.buildWorkPackageTab();
+		};
+		if (clickedTabId == '#vaReqs'){
+			VA_REQUIREMENTS.init(verticalAccuracyUrls, vars);
+			VA_REQUIREMENTS.buildVARequirementsTab();
+		};
+		if (clickedTabId == '#collInfo'){
+			var _collInfoDomainsCheck = collInfoUrls['checkDomains'];
+			$.ajax({
+				url: _collInfoDomainsCheck,
+				type: 'GET',
+				success: function(data) {
+					if (data['success'] == 'True'){
+						COLLECTION_INFO.init(collInfoUrls, vars)
+						COLLECTION_INFO.buildCollectionInfoTab();
+					}
+					else{
+						var missingDomains = '';
+						$(data['missing']).each(function(){
+							missingDomains += '-' + this + '<br>';
+						})
+						var message = '<br><br><p>Unable to load Collection Info Form.The following form fields are missing domain values:<br><br>' +
+						missingDomains + '<br>Please contact the admin.</p>';
+						$('#collInfo').html(message);
+					}
+				}
+			});			
+		};
+		if (clickedTabId == '#deliverables'){
+			DELIVERABLES.init(deliverableUrls, vars);
+			DELIVERABLES.buildDeliverablesTab();
+		};
+		if (clickedTabId == '#dem'){			
+			DEM.init(demUrls, vars);
+			DEM.buildDemTab();
+		};
+		if (clickedTabId == '#metadata'){
+			METADATA.init(metadataUrls, vars);
+			METADATA.buildMetadataTab();
+		};
+		if (clickedTabId == '#pointcloud'){
+			POINTCLOUD.init(pointcloudUrls, vars);
+			POINTCLOUD.buildPointcloudTab();
+		};
+		if (clickedTabId == '#other'){
+			GENERIC.buildDeliverableSubtabs(false, false, false, true);
+		};			 
+	});
+
+	// Review page initialization//
+	
+	// Get a cookie
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+	$('#mainTabController li a[href="#wpInfo"]').click();
+	$('#mainTabController').show();
+	
+});
+
+</script>   
+{% endblock %}

@@ -1,0 +1,74 @@
+<br>
+{% if userFilter %}
+<h4 style = 'margin-bottom:5'>Active Reviews for User: {{reviewUser}}</h4>
+<a href = '#' id = 'allReviews'>Display Active Reviews for All Users</a>
+{% else %}
+<h4 style = 'margin-bottom:5'>Active Reviews for all Users</h4>
+{% endif %}
+<div class = 'row row-eq-height'>
+	<div class = 'col-md-5 vcenter text-center'>
+		<hr>
+		<br>
+		<div id = 'reviews' align = 'left'>
+			{% if userFilter %}
+				{% if userReviews %}
+				<table style="border:none;font-size:14">
+					<tr>
+						<td style = "width:100;border:none;padding-bottom:1em"><label>Review Name</label></td>
+						<td style = "width:100;border:none;padding-bottom:1em"><label>Review Detail</label></td>
+					</tr>
+					{% for userReview in userReviews %}
+					<tr>
+						<td style = "width:100;border:none;padding-bottom:1em">{{ userReview.name }}</td>
+						<td style = "width:100;border:none;padding-bottom:1em"><a id='review{{userReview.id}}' href="#">Link</a></td>
+					</tr>
+					{% endfor %}
+				</table>
+				{% else %}
+					<p>No Reviews have been assigned to User: {{reviewUser}}</p>
+				{% endif %}
+				<br>
+				
+			{% else %}
+				{% if reviews %}
+					<table style="border:none;font-size:14">
+						<tr>
+							<td style = "width:100;border:none;padding-bottom:1em"><label>Review Name</label></td>
+							<td style = "width:100;border:none;padding-bottom:1em"><label>User ID</label></td>
+							<td style = "width:100;border:none;padding-bottom:1em"><label>Review Detail</label></td>
+						</tr>
+						{% for review in reviews %}
+						<tr>
+							<td style = "width:100;border:none;padding-bottom:1em">{{ review.name }}</td>
+							<td style = "width:100;border:none;padding-bottom:1em">{{review.user.username}}</td>
+							<td style = "width:100;border:none;padding-bottom:1em"><a href="{% url 'adminReview' review.id %}">Link</a></td>
+						</tr>
+						{% endfor %}
+					</table>
+					<br>
+					<hr>
+					<br>
+					<table style = "border:none;font-size:14px">
+						<tr>
+							<td style = "border:none;padding-bottom:1em"><label>Filter Reviews by User</label></td>
+							<td style = "border:none;padding-bottom:1em">
+								<select id = 'selectQcrUsers'>
+									{% for qcrUser in qcrUsers %}
+										<option id = "{{qcrUser}}" value= "{{qcrUser}}">{{qcrUser}}</option>
+									{% endfor %}
+								</select>
+							</td>
+							<td style = "border:none;padding-bottom:1em"><button id = 'userDetailBtn' class="btn-default">Submit</button></td>
+						</tr>
+					</table>
+					<br>
+				{% else %}
+					<p>No Reviews have been created yet.</p>
+					<br>
+				{% endif %}
+				<hr>
+				<button id = 'addReview' class="btn-default">Add Review</button>
+			{% endif %}
+		</div>
+		</div><!-- col-md-5 -->
+</div><!-- row-eq-height -->	

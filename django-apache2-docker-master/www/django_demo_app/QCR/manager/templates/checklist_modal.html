@@ -1,0 +1,49 @@
+
+<span class="closeModal">&times;</span>
+<h4 style = 'float:left'><b>{{review.name}} Progress Checklist</b></h4>
+<br>
+<br>
+<br>
+<div id = "modalTabController" class="container-fluid">
+	<ul id = "modalTabs" class="nav nav-tabs">
+		{% for category, items in checklistItems.items %}
+		{% if forloop.counter == 1%}
+		<li class = 'active'><a class = 'modalChecklistTab' href="#{{category|slice:':3'}}" data-toggle="tab">{{category}}</a></li>
+		{% else %}
+		<li><a class = 'modalChecklistTab' href="#{{category|slice:':3'}}" data-toggle="tab">{{category}}</a></li>
+		{% endif %}
+		{% endfor %}
+	</ul>
+	<div class="tab-content">
+		{% for category, items in checklistItems.items %}
+			{% if forloop.counter == 1%}
+			<div class="tab-pane active" id="{{category|slice:':3'}}">
+			{% else %}
+			<div class="tab-pane" id="{{category|slice:':3'}}">
+			{% endif %}
+				<br>
+				{% if items %}
+					<table style = 'border:none'>
+					{% for item in items %}
+					<tr>
+						<td style = 'border:none;padding-bottom:15px;padding-top:15px'>{{item.placement}}.  </td>
+						<td style = 'border:none;padding-bottom:15px;padding-top:15px'>{{item.name}}</td>
+						{% if item.complete %}
+						<td style = 'border:none;float:right;padding-left:50px;padding-bottom:15px;padding-top:15px'><input type="checkbox" class = "checked" id = 'step{{item.category.name|slice:":3"}}{{item.placement}}'></td>
+						{% else %}
+						<td style = 'border:none;float:right;padding-left:50px;padding-bottom:15px;padding-top:15px'><input type="checkbox" id = 'step{{item.category.name|slice:":3"}}{{item.placement}}'></td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+					</table>
+					<br>
+				{% else %}
+					<br>
+					<p>No steps have been added to the {{category}} category.</p>	
+					<br>
+				{% endif %}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+		

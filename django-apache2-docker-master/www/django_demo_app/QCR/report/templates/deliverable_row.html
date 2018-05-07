@@ -1,0 +1,110 @@
+{% if d %}
+<tr id = 'rowDeliv_Gen{{d.id}}' class = 'delivRow'>
+	<td>
+	<select id = 'catSelect_Gen{{d.id}}' style = 'width:100%'>
+	{% for category in categories %}
+	{% if category == d.deliverableCategory.name %}
+	<option selected>{{d.deliverableCategory.name}}</option>
+	{% else %}
+	<option>{{category}}</option>
+	{% endif %}
+	{% endfor %}
+	</select>
+	</td>
+	<td><input id = 'desc_Gen{{d.id}}' type = 'text' value = '{{ d.description }}' style = 'width:100%'></td>
+	<td><input id = 'qty_Gen{{d.id}}' type = 'number' value = '{{ d.quantity }}' style = 'width:100%'></td>
+	<td><input id = 'spatRef_Gen{{d.id}}' type = 'text' value = '{{ d.spatialReference }}' style = 'width:100%'></td>
+	<td><select id = "reqPerContractSelect_Gen{{d.id}}">
+	{% if d.reqPerContract == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><select id = "reqPerSpecSelect_Gen{{d.id}}">
+	{% if d.reqPerSpec == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'False'selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><select id = "delivSelect_Gen{{d.id}}">
+	{% if d.delivered == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><select id = "acceptedSelect_Gen{{d.id}}">
+	{% if d.accepted == True %}
+	<option value = 'False'>No</option>
+	<option value = 'True' selected>Yes</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><input id = "submitGenDelivChg_Gen{{d.id}}" type = "submit" class = "btn-default updateDeliverable" value = "Submit" style = 'display:inline-block'></td>
+</tr>
+{% endif %}
+{% if awd %}
+<tr id = 'rowDeliv_Awd{{awd.id}}' class = 'delivRow'>
+	<td>
+	<select id = 'catSelect_Awd{{awd.id}}' style = 'width:100%'>
+	{% for category in categories %}
+	{% if category == awd.category.name %}
+	<option selected>{{awd.category.name}}</option>
+	{% else %}
+	<option>{{category}}</option>
+	{% endif %}
+	{% endfor %}
+	</select>
+	</td>
+	<td><input id = 'desc_Awd{{awd.id}}' type = 'text' value = '{{ awd.description }}' style = 'width:100%'</td>
+	<td><input id = 'qty_Awd{{awd.id}}' type = 'number' value = '{{ awd.quantity }}' style = 'width:100%'></td>
+	<td><input id = 'spatRef_Awd{{awd.id}}' type = 'text' value = '{{ awd.spatialReference }}' style = 'width:100%'></td>
+	<td><select id = "reqPerContractSelect_Awd{{awd.id}}" selected>
+	{% if awd.reqPerContract == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'True'>Yes</option>
+	<option value = 'False' selected>No</option>
+	{% endif %}
+	</select></td>
+	<td><select id = "reqPerSpecSelect_Awd{{awd.id}}">
+	{% if awd.reqPerSpec == True %}
+	<option value = 'False'>No</option>
+	<option value = 'True' selected>Yes</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option> 
+	{% endif %}
+	</select></td>
+	<td><select id = "delivSelect_Awd{{awd.id}}">
+	{% if awd.delivered == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><select id = "acceptedSelect_Awd{{awd.id}}">
+	{% if awd.accepted == True %}
+	<option value = 'True' selected>Yes</option>
+	<option value = 'False'>No</option>
+	{% else %}
+	<option value = 'False' selected>No</option>
+	<option value = 'True'>Yes</option>
+	{% endif %}
+	</select></td>
+	<td><input id = "submitAwDelivChg_Awd{{awd.id}}" type = "submit" class = "btn-default updateDeliverable" value = "Submit" style = 'display:inline-block'></td>
+</tr>
+{% endif %}

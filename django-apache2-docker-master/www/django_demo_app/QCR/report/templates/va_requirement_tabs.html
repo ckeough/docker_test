@@ -1,0 +1,20 @@
+<div id = "vaRequirements" class = "hideOnInit">
+	<div id = "vaRequirementsTabController" class="container-fluid">
+		<ul id = "vaRequirementsTabObjects" class="nav nav-tabs">
+			{% for vaReq in vaReqs %}
+			<li><a id = "vaRequirementLink{{vaReq.id}}" href="#vaRequirementUpdate{{vaReq.id}}" data-toggle="tab">VA Req {{vaReq.id}}</a></li>
+			{% endfor %}
+			{% if freeWus %}
+			<li><a id = "vaRequirementAddLink" href="#vaRequirementAdd" data-toggle="tab">+</a></li>
+			{% endif %}
+		</ul>
+		<div id = "vaRequirementsTabContent" class="tab-content">
+			{% for vaReq in vaReqs %}
+			<div class="tab-pane" id="vaRequirementUpdate{{vaReq.id}}" ></div>
+			{% endfor %}
+			{% if freeWus %}
+			<div class="tab-pane" id="vaRequirementAdd" ></div>
+			{% endif %}
+		</div>
+	</div>
+</div>

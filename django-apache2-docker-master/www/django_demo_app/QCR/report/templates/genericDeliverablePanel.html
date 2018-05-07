@@ -1,0 +1,91 @@
+
+{% if deliverable.deliverableCategory.category == 1 %}
+<div id = "MetadataDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "MetadataCol" class="col-md-12">
+{% elif deliverable.deliverableCategory.category == 2 %}
+<div id = "BreaklineDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "BreaklineCol" class="col-md-12">
+{% elif deliverable.deliverableCategory.category == 4 %}
+<div id = "ClassifiedDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "ClassifiedCol" class="col-md-12">
+{% elif deliverable.deliverableCategory.category == 5 %}
+<div id = "SwathDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "SwathCol" class="col-md-12">
+{% elif deliverable.deliverableCategory.category == 6 %}
+<div id = "ReportDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "ReportCol" class="col-md-12">
+{% elif deliverable.deliverableCategory.category == 7 %}
+<div id = "OtherDeliverable{{ deliverable.id }}" class = "row no-gutters">
+	<div id = "OtherCol" class="col-md-12">
+{% endif %}
+
+		<div class="panel panel">
+			<div class="panel-heading">
+				<h3 class="panel-title">{{ type }} Deliverable: ID {{ deliverable.id }}</h3>
+				<span id = "collPanel{{ deliverable.id }}" class="pull-right clickable panel-collapsed"><i class="glyphicon glyphicon-chevron-down"></i></span>
+			</div>
+			<div class="panel-body hideOnInit">
+				<div id = 'delivs{{ deliverable.id }}' class = 'genericDeliv'>
+					{% include "deliverable_form.html" %}
+					{% if wuList %}
+					<label for = "#wuSelect{{ deliverable.id }}">Link Deliverable to the Following Work Units: </label>
+					<br>
+					<select id = "wuSelect{{ deliverable.id }}" multiple = "multiple" class = 'genericWUSelect'>
+					{% for wu in wuList %}
+						<option value= "{{wu.workUnitId}}">{{wu.name}}</option>
+					{% endfor %}
+					<select>
+					<br>
+					<br>
+					{% endif %}
+					<div id = "deliverableButtons{{ deliverable.id }}">
+						<input id = "updateDeliv{{ deliverable.id }}" type = "button" class = "updateDelivButton btn-default" value = "Update">
+						<input id = "cancelDeliv{{ deliverable.id }}" type = "button" class = "cancelDelivButton btn-default" value = "Cancel">
+						<input id = "deleteDeliv{{ deliverable.id }}" type = "button" class = "deleteDelivButton btn-default" value = "Delete">
+					</div>
+					{% if deliverable.workUnit %}
+					<h3>Associated Work Units</h3>
+					<div id = 'wuSameInfo'>
+					<table id = "wuSameInfo"style = "border:0">
+					{% for dwu in deliverable.workUnit.all %}
+					<tr id = "{{dwu.workUnitId}}">
+						<td style = "border:none">{{dwu.name}}</td>
+						<td style = "border:none" id = 'remove{{deliverable.id}}'><input id = "removeGenericWu{{dwu.workUnitId}}" type = "button" class = "removeDelivButton btn-default" value = "Remove"/></td>
+					</tr>
+					{% endfor %}
+					</table>
+					</div>
+					{% endif %}
+				</div>
+				<div id = 'error{{deliverable.id}}'>
+					<h3>Errors:</h3>
+					<div id = 'errorList{{deliverable.id}}'>
+						{% if errors %}
+						{% include "error_table.html" %}
+						<br>
+						<div id = "errorTableButtons{{deliverable.id}}" class = "errorTableButtons hideOnInit">
+							<input id = "updateErrors{{deliverable.id}}" type = "button" class = "btn-default" value = "Update">
+							<input id = "cancelUpdate{{deliverable.id}}" type = "button" class = "btn-default" value = "Cancel">
+						</div>
+						<br>
+						{% include "error_modals.html" %}
+						{% else %}
+						<p>There are no errors currently associated with this deliverable.</p>
+						{% endif %}
+					</div>
+					<div id = "addErrorForm{{deliverable.id}}" class = "errorForm hideOnInit">
+						{% include "error_form.html" %}
+						<div id = "errorButtons{{deliverable.id}}">
+							<input id = "submitErrorBtn{{deliverable.id}}" type = "button" class = "btn-default" value = "Submit">
+							<input id = "cancelErrorBtn{{deliverable.id}}" type = "button" class = "btn-default" value = "Cancel">
+						</div>
+						<br>	
+					</div>
+					<div id = "addErrorButton{{deliverable.id}}">
+						<input id = "addError{{deliverable.id}}" type = "button" class = "btn-default" value = "Add Error">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

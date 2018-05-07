@@ -1,0 +1,187 @@
+{% if swath %}
+<h3>Swath Information</h3>
+<table id = 'aggregatedWuDeliv'>
+	<tr>
+		<td><label for="swathDesc">Description:</label></td>
+		<td><input type="text" id="swathDesc" value = "{{swath.description}}"></td>
+	</tr>
+	<tr>
+		<td><label for="quantity">Quantity:</label></td>
+		<td><input type="number" id="quantity" value = "{{swath.quantity}}"></td>
+	</tr>
+	<tr>
+		<td><label for="spatRef">Spatial Reference:</label></td>
+		<td><input type="text" id="spatRef" value = "{{swath.spatialReference}}"></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerContract">Required Per Contract:</label></td>
+		<td>
+			<select id="reqPerContract" name = 'reqPerContract'>
+				{% if swath.reqPerContract %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="reqPerSpec">Required Per Spec:</label></td>
+		<td>
+			<select id="reqPerSpec" name = 'reqPerSpec'>
+				{% if swath.reqPerSpec %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="swathPCVS">Swath PCVs:</label></td>
+		<td><input type="number" class = "number" id="swathPCVS" value = "{{swath.swathPCVs}}"></td>
+	</tr>
+	<tr>
+		<td><label for="prdf">Point Record Data Format:</label></td>
+		<td><input type="text" id="prdf" value = "{{swath.pointRecDataFormat}}"></td>
+	</tr>
+	<tr>
+		<td><label for="requiredInterswath">Required Interswath:</label></td>
+		<td><input type="number" class = "number" id="requiredInterswath" value = "{{swath.requiredInterswath}}"></td>
+	</tr>
+	<tr>
+		<td><label for="recordedInterswath">Recorded Interswath:</label></td>
+		<td><input type="number" class = "number" id="recordedInterswath" value = "{{swath.recordedInterswath}}"></td>
+	</tr>
+	<tr>
+		<td><label for="testedInterswath">Tested Interswath:</label></td>
+		<td><input type="number" class = "number" id="testedInterswath" value = "{{swath.testedInterswath}}"></td>
+	</tr>
+	<tr>
+		<td><label for="delivered">Delivered:</label></td>
+		<td>
+			<select id="delivered" name = 'delivered'>
+				{% if swath.delivered %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="accepted">Accepted:</label></td>
+		<td>
+			<select id="accepted" name ='accepted'>
+				{% if swath.accepted %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>	
+</table>
+<!-- get va reqs/reported/tested -->
+{% else %}
+<h3>Add Swath</h3>
+<table id = 'aggregatedWuDeliv'>
+	<tr>
+		<td><label for="swathDesc">Description:</label></td>
+		<td><input type="text" id="swathDesc"></td>
+	</tr>
+	<tr>
+		<td><label for="quantity">Quantity:</label></td>
+		<td><input type="number" id="quantity"></td>
+	</tr>
+	<tr>
+		<td><label for="spatRef">Spatial Reference:</label></td>
+		<td><input type="text" id="spatRef"></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerContract">Required Per Contract:</label></td>
+		<td><select id="reqPerContract" name="reqPerContract"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerSpec">Required Per Spec:</label></td>
+		<td><select id="reqPerSpec" name="reqPerSpec"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="swathPCVS">Swath PCVs:</label></td>
+		<td><input type="number" class = "number" id="swathPCVS"></td>
+	</tr>
+	<tr>
+		<td><label for="prdf">Point Record Data Format:</label></td>
+		<td><input type="text" id="prdf"></td>
+	</tr>
+	<tr>
+		<td><label for="requiredInterswath">Required Interswath:</label></td>
+		<td><input type="number" class = "number" id="requiredInterswath"></td>
+	</tr>
+	<tr>
+		<td><label for="recordedInterswath">Recorded Interswath:</label></td>
+		<td><input type="number" class = "number" id="recordedInterswath"></td>
+	</tr>
+	<tr>
+		<td><label for="testedInterswath">Tested Interswath:</label></td>
+		<td><input type="number" class = "number" id="testedInterswath"></td>
+	</tr>
+	<tr>
+		<td><label for="delivered">Delivered:</label></td>
+		<td><select id="delivered" name="delivered"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="accepted">Accepted:</label></td>
+		<td><select id="accepted" name="accepted"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+</table>
+<!-- get va reqs and allow user to add reported and tested -->
+{% endif %}
+<br>
+
+{% if initialWuList %}
+<label for = "#wuSwathSelect">Select an initial Work Unit with which to associate Swath Information: </label>
+<br>
+<select id = "wuSwathSelect">
+{% for key, value in initialWuList.items %}
+<option value = "Work Unit {{key}}">{{value}}</option>
+{% endfor %}
+</select><br><br>
+{% endif %}
+
+{% if wuList %}
+<label for = "#wuCiMultiSelect">Apply Swath Information to the Following Work Units: </label>
+<br>
+<select id = "wuCiMultiSelect" multiple = "multiple">
+{% for wu in wuList %}
+<option value = "Work Unit {{ wu }}">{{ wu.name }}</option>
+{% endfor %}
+</select><br><br>
+{% endif %}
+{% if swath %}
+<input id = "updateAggregatedWuDeliv" type = "button" class = "btn-default" value = "Update Swath"/>
+<input id = "cancelUpdateAggregatedWuDeliv" type = "button" class = "btn-default" value = "Cancel Update"/>
+<input id = "deleteAggregatedWuDeliv" type = "button" class = "btn-default" value = "Delete Swath"/>
+{% endif %}
+{% if wuSameInfo %}
+<div id = 'wuSameInfo'>
+	<h3>Swath Associated Work Units</h3>
+	<table id = "wuSameInfo"style = "border:0">
+	{% for wu in wuSameInfo %}
+	<tr id = "{{wu.workUnitId}}">
+		<td style = "border:none">{{wu.name}}</td>
+		<td style = "border:none"><input id = "removeWu{{wu.workUnitId}}" type = "button" class = "btn-default" value = "Remove Swath from Work Unit"/></td>
+	</tr>
+	{% endfor %}
+	</table>
+	<br>
+</div>
+{% endif %}

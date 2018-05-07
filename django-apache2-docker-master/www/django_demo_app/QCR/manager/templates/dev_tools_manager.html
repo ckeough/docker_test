@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+	<div class = "row no-gutters">
+		<div class='col-md-6'>
+			<div id = 'devToolsManager'>
+				<div id = "manageProjectSpec" class = "boxed">
+					<h4>Manage Project Specification Values</h4>				
+					<div id = "addProjectSpec">
+						<label for = "addProjectSpecInput">Add Project Specification Value</label>
+						<input type="number" class = "number" id="addProjectSpecInput" style = "width:4em" value = "">
+						<input id = "addProjectSpecBtn" type = "button" class = "btn-default" value = "Submit">
+						<input id = "cxlProjectSpecBtn" type = "button" class = "btn-default" value = "Reset">
+					</div><!-- addProjectSpec -->
+					<div id = "deleteProjectSpec">
+						<label for = "projectSpecsDelete">Delete Project Specification Value</label>
+						<select id="projectSpecsDelete" name="projectSpecsDelete">
+						{% for PS in projectSpecs %}
+							{% if forloop.first %}
+								<option selected value= "{{PS.name}}">{{PS.name}}</option>
+							{% else %}
+								<option value= "{{PS.name}}">{{PS.name}}</option>
+							{% endif %}
+						{% endfor %}
+						</select>
+						<input id = "deleteProjectSpecBtn" type = "button" class = "btn-default" value = "Delete">				
+					</div><!-- deleteProjectSpec -->
+					<br>
+				</div><!-- manageProjectSpec -->
+				<div id = "manageQualityLevel" class = "boxed">
+					<h4>Manage Quality Level Values</h4>
+					<div id = "addQualityLevel">
+						<label for = "addQualityLevelInput">Add Quality Level Value</label>							
+						<input type="text" class = "text" id="addQualityLevelInput" style = "width:50px" maxlength = "3" value = "">
+						<input id = "addQualityLevelBtn" type = "button" class = "btn-default" value = "Submit">
+						<input id = "cxlQualityLevelBtn" type = "button" class = "btn-default" value = "Reset">
+					</div>			
+					<div id = "deleteQualityLeval">
+						{% if qualityLevels %}
+							<label for = "qualityLevelDelete">Delete Quality Level Value</label>					
+							<select id="qualityLevelDelete" name="qualityLevelDelete">
+							{% for QL in qualityLevels %}
+								{% if forloop.first %}
+									<option select value= "{{QL.name}}">{{QL.name}}</option>
+								{% else %}
+									<option value= "{{QL.name}}">{{QL.name}}</option>
+								{% endif %}
+							{% endfor %}
+							</select>
+							<input id = "deleteQualityLevelBtn" type = "button" class = "btn-default" value = "Delete">
+						{% else %}
+							<p>No quality levels have been entered in the database.</p>
+						{% endif %}
+					</div>
+				</div><!-- manageQualityLevel -->			
+				{% if projectSpecs %}
+				<div id = "manageWorkPackages" class = 'boxed'>
+					<h4>Manage Work Packages</h4>
+					{% if workPackages %}
+					<table id = 'workPackages'>
+					{% for wp in workPackages %}
+					<li><a href="{% url 'devWorkPackage' wp.workPackageId %}">Work Package {{wp.workPackageId}}</a></li>
+					{% endfor %}
+					</table>
+					{% else %}
+					<p>No Work Packages have been created yet.</p>
+					{% endif %}
+					<form action = "{% url 'createWorkPackage' %}">
+						<input type = "submit" value = "Add Work Package">
+					</form>
+				</div><!-- manageWorkPackages -->
+				{% endif %}
+				{% if workPackages and qualityLevels%}
+				<div id = "manageReviews" class = 'boxed'>
+					<h4>Manage Reviews</h4>
+					{% if reviews %}
+					{% for review in reviews %}
+					<li><a href="{% url 'adminReview' review.id %}">Review {{review.id}}</a></li>
+					{% endfor %}
+					{% else %}
+					<p>No Reviews have been created yet.</p>
+					{% endif %}
+					<input id = 'addReview' type="button" class="btn-default" value = "Add Review">
+				</div><!-- manageReviews -->
+				{% endif %}
+			</div><!-- devToolsManager -->
+		</div><!-- col-md-6 -->
+	</div><!-- row -->
+</div><!-- container -->
+
+<script>
+var urlAddProjectSpec = "{% url 'addProjectSpec' %}";
+var urlAddQualityLevel = "{% url 'addQualityLevel' %}";
+var urlDeleteProjectSpec = "{% url 'deleteProjectSpec' %}";
+var urlDeleteQualityLevel = "{% url 'deleteQualityLevel' %}";
+
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	});
+
+	function setProjSpecQualLevelHandlers(){
+		
+		// Project Spec Buttons - NOT IMPLEMENTED FOR NOW - MAY BE ACCESSED BY CHANGED .notImplemented CSS CLASS TO 'display:block'
+		$(document).off('click', '#cxlProjectSpecBtn').on('click', '#cxlProjectSpecBtn', function (e){
+			$('#addProjectSpecInput').val('');		
+		});	
+		
+		$(document).off('click', '#addProjectSpecBtn').on('click', '#addProjectSpecBtn', function (e){
+			e.preventDefault();
+			newProjectSpec = $('#addProjectSpecInput').val();
+			$("#projectSpecsDelete").each(function(){
+				if ($(this).val() == newProjectSpec){
+					alert('LBS ' + newProjectSpec + ' has already been entered.');
+					return;						
+				}
+			});
+			var json = JSON.stringify({
+				'projectSpec': newProjectSpec
+			});	
+			$.ajax({
+				url: urlAddProjectSpec,
+				type: "POST",
+				data: json,
+				success: function(data) {
+					$('#projectSpecsDelete').empty();
+					$('#projectSpecs').empty();
+					$('#addProjectSpecInput').val('')
+					var newValues = data['values']
+					for(var i = 0; i < newValues.length; i++)
+					{
+						var spec = parseFloat(newValues[i]).toFixed(1);
+						$('#projectSpecsDelete').append($("<option></option>").attr("value", spec).text(spec));
+						$('#projectSpecs').append($("<option></option>").attr("value", spec).text(spec));
+						$("#projectSpecsDelete").val($("#projectSpecsDelete option:first").val());
+						$('#projectSpecs').val($("#projectSpecs option:first").val());
+					}
+				}
+			});										
+		});	
+		
+		$(document).off('click', '#deleteProjectSpecBtn').on('click', '#deleteProjectSpecBtn', function (e){
+			e.preventDefault();
+			var json = JSON.stringify({
+				'projectSpec': $("#projectSpecsDelete").val()
+			});	
+			$.ajax({
+				url: urlDeleteProjectSpec,
+				type: "POST",
+				data: json,
+				success: function(data) {
+					$('#projectSpecsDelete').empty();
+					$('#projectSpecs').empty();
+					$('#addProjectSpecInput').val('')
+					var newValues = data['values']
+					for(var i = 0; i < newValues.length; i++)
+					{
+						var spec = parseFloat(newValues[i]).toFixed(1);
+						$('#projectSpecsDelete').append($("<option></option>").attr("value", spec).text(spec));
+						$('#projectSpecs').append($("<option></option>").attr("value", spec).text(spec));
+					}
+				}
+			});	
+		});		
+		
+		// Quality Level Buttons
+		$(document).off('click', '#cxlQualityLevelBtn').on('click', '#cxlQualityLevelBtn', function (e){
+			$('#addQualityLevelInput').val('');		
+		});
+		
+		$(document).off('click', '#addQualityLevelBtn').on('click', '#addQualityLevelBtn', function (e){
+			e.preventDefault();
+			var duplicate = false;
+			newQualityLevel = $('#addQualityLevelInput').val();
+			$("#qualityLevelDelete").each(function(){
+				if ($(this).val() == newQualityLevel){
+					alert('Quality Level ' + newQualityLevel + ' has already been entered.');
+					$('#addQualityLevelInput').val('');
+					duplicate = true;
+					return false;						
+				}
+			});
+			if (duplicate == false){
+				var json = JSON.stringify({
+					'qualityLevel': $('#addQualityLevelInput').val()
+				});	
+				$.ajax({
+					url: urlAddQualityLevel,
+					type: "POST",
+					data: json,
+					success: function(data) {
+						location.reload();
+					}
+				});		
+			}
+		});	
+		
+		$(document).off('click', '#deleteQualityLevelBtn').on('click', '#deleteQualityLevelBtn', function (e){
+			e.preventDefault();
+			var json = JSON.stringify({
+				'qualityLevel': $('select[id="qualityLevelDelete"]').val()
+			});	
+			$.ajax({
+				url: urlDeleteQualityLevel,
+				type: "POST",
+				data: json,
+				success: function(data) {
+					location.reload();
+				}
+			});				
+		});
+	
+	};
+
+	setProjSpecQualLevelHandlers();
+	$(document).off('click', '#addReview').on('click', '#addReview', function (e){	
+			$.ajax({
+			url: "{% url 'getWorkPackages' %}",
+			type: "GET",
+			success: function(data) {
+				if (data['result'] == 'success'){
+					var url = "{% url 'createReview' %}";
+					location.href = url;
+				}
+				else{
+					alert('There are currently no Work Packages with free Work Units to add to a new Review.  Cannot create a new Review at this time.');
+				}
+			}
+		});
+	
+	});
+});
+</script>
+{% endblock %}
+
+		

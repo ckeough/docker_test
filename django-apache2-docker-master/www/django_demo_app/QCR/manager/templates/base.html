@@ -1,0 +1,47 @@
+{% load staticfiles %}
+{% block title %}{% endblock %}
+{% if messages %}
+  {% for message in messages %}
+    <div{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+      <a class="close" data-dismiss="alert" href="#">&times;</a>
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{% static 'css/richtext.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/report.css' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<script type = "text/javascript" src="{% static 'jquery.richtext.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'gimmeCookie.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'functions.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'work_package.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'va_requirements.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'collection_info.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'deliverables.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'generic_deliverable.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'aggregate_wu_deliverable.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'dem.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'metadata.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'pointcloud.js' %}"></script>
+	<script type = "text/javascript" src="{% static 'admin_home.js' %}"></script>
+</head>
+<div class="page-header">
+	<h1>QCR</h1>
+	<a href="{% url 'home' %}">Home</a>
+</div>
+<!-- TODO: can this or 'gimme cookie' be removed?  Seems redundant -->
+{% csrf_token %}
+{% block body %}{% endblock %}
+</html>

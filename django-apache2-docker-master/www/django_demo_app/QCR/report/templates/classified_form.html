@@ -1,0 +1,163 @@
+{% if classified %}
+<h3>Classified Information</h3>
+<table id = 'aggregatedWuDeliv'>
+	<tr>
+		<td><label for="classDesc">Description:</label></td>
+		<td><input type="text" id="classDesc" value = "{{classified.description}}"></td>
+	</tr>
+	<tr>
+		<td><label for="quantity">Quantity:</label></td>
+		<td><input type="number" id="quantity" value = "{{classified.quantity}}"></td>
+	</tr>
+	<tr>
+		<td><label for="spatRef">Spatial Reference:</label></td>
+		<td><input type="text" id="spatRef" value = "{{classified.spatialReference}}"></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerContract">Required Per Contract:</label></td>
+		<td>
+			<select id="reqPerContract" name = 'reqPerContract'>
+				{% if classified.reqPerContract %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="reqPerSpec">Required Per Spec:</label></td>
+		<td>
+			<select id="reqPerSpec" name = 'reqPerSpec'>
+				{% if classified.reqPerSpec %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="classPCVS">Classified PCVs:</label></td>
+		<td><input type="number" class = "number" id="classPCVS" value = "{{classified.classPCVs}}"></td>
+	</tr>
+	<tr>
+		<td><label for="prdf">Point Record Data Format:</label></td>
+		<td><input type="text" id="prdf" value = "{{classified.pointRecDataFormat}}"></td>
+	</tr>
+	<tr>
+		<td><label for="delivered">Delivered:</label></td>
+		<td>
+			<select id="delivered" name = 'delivered'>
+				{% if classified.delivered %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="accepted">Accepted:</label></td>
+		<td>
+			<select id="accepted" name = 'accepted'>
+				{% if classified.accepted %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select>
+		</td>
+	</tr>	
+</table>
+<!-- get va reqs/reported/tested -->
+{% else %}
+<h3>Add Classified</h3>
+<table id = 'aggregatedWuDeliv'>
+	<tr>
+		<td><label for="classDesc">Description:</label></td>
+		<td><input type="text" id="classDesc"></td>
+	</tr>
+	<tr>
+		<td><label for="quantity">Quantity:</label></td>
+		<td><input type="number" id="quantity"></td>
+	</tr>
+	<tr>
+		<td><label for="spatRef">Spatial Reference:</label></td>
+		<td><input type="text" id="spatRef"></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerContract">Required Per Contract:</label></td>
+		<td><select id="reqPerContract" name="reqPerContract"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="reqPerSpec">Required Per Spec:</label></td>
+		<td><select id="reqPerSpec" name="reqPerSpec"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="classPCVS">Classified PCVs:</label></td>
+		<td><input type="number" class = "number" id="classPCVS"></td>
+	</tr>
+	<tr>
+		<td><label for="prdf">Point Record Data Format:</label></td>
+		<td><input type="text" id="prdf"></td>
+	</tr>
+	<tr>
+		<td><label for="delivered">Delivered:</label></td>
+		<td><select id="delivered" name="delivered"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+	<tr>
+		<td><label for="accepted">Accepted:</label></td>
+		<td><select id="accepted" name="accepted"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+	</tr>
+</table>
+<!-- get va reqs and allow user to add reported and tested -->
+{% endif %}
+<br>
+
+{% if initialWuList %}
+<label for = "#wuClassifiedSelect">Select an initial Work Unit with which to associate Classified Information: </label>
+<br>
+<select id = "wuClassifiedSelect">
+{% for key, value in initialWuList.items %}
+<option value = "Work Unit {{key}}">{{value}}</option>
+{% endfor %}
+</select><br><br>
+{% endif %}
+
+{% if wuList %}
+<label for = "#wuCiMultiSelect">Apply Classified Information to the Following Work Units: </label>
+<br>
+<select id = "wuCiMultiSelect" multiple = "multiple">
+{% for wu in wuList %}
+<option value = "Work Unit {{ wu }}">{{ wu.name }}</option>
+{% endfor %}
+</select><br><br>
+{% endif %}
+{% if classified %}
+<input id = "updateAggregatedWuDeliv" type = "button" class = "btn-default" value = "Update Classified"/>
+<input id = "cancelUpdateAggregatedWuDeliv" type = "button" class = "btn-default" value = "Cancel Update"/>
+<input id = "deleteAggregatedWuDeliv" type = "button" class = "btn-default" value = "Delete Classified"/>
+{% endif %}
+{% if wuSameInfo %}
+<div id = 'wuSameInfo'>
+	<h3>Classified Associated Work Units</h3>
+	<table id = "wuSameInfo"style = "border:0">
+	{% for wu in wuSameInfo %}
+	<tr id = "{{wu.workUnitId}}">
+		<td style = "border:none">{{wu.name}}</td>
+		<td style = "border:none"><input id = "removeWu{{wu.workUnitId}}" type = "button" class = "btn-default" value = "Remove Classified from Work Unit"/></td>
+	</tr>
+	{% endfor %}
+	</table>
+	<br>
+</div>
+{% endif %}

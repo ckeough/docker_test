@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}<title>Review {{review.name}} - Error Map</title>{% endblock %}
+{% block body %}
+<body>
+<div id = 'wrapper' style = 'text-align:center'>
+<h2 style = 'display:inline-block'>Review {{review.name}} - Error Map</h2>
+<br>
+<div id = 'mapWrapper' style = 'height:500px;width:800px;display:inline-block;'>
+	<div id="mapid" style = 'height:500px;width:800px'></div>
+	<form id = 'shapefileForm' action = "{% url 'buildErrorGeopackage' review.id %}" method = 'post' enctype="multipart/form-data">
+		{% csrf_token %}
+		<button type = 'submit' value = 'generateShapefile' name = 'generateShapefile' style="position:relative; top: -30px; float:left; margin-left:10px; z-index:1001">Generate Geopackage</button>
+	</form>
+</div>
+</div>
+<br>
+<br>
+</body>
+<script>
+$(document).ready(function(){
+	var mymap = L.map('mapid').setView([0,0],7);	
+	L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		maxZoom: 18,
+		id: 'mapbox.streets',
+		accessToken: 'pk.eyJ1IjoiY2tlb3VnaCIsImEiOiJjamcyZWJmZXAyMzdzMzJxN2ZlYjFyNzNuIn0.WZxR17pXz6Nya69UicdY3w'
+	}).addTo(mymap);
+	var markerArray = [];
+	var url = "{% url 'getGeojson' review.id %}";
+	$.ajax({
+		url: url,
+		type: "GET",
+		success: function(data) {
+			$(data['errors']).each(function(){
+				var marker = L.marker(new L.LatLng(parseFloat(this['lat']), parseFloat(this['lon']), {})).addTo(mymap);
+				marker.bindPopup("<b>Deliverable Type: </b>" + this["delivType"] + '<br><b>Deliverable ID: </b>' + this["delivId"] + "<br><b>Type: </b>" + this['type'] + '<br><b>Subtype: </b>' + this['subtype'] + '<br><b>Description: </b>' + this['desc']);
+				markerArray.push(marker);
+			});
+			var group = L.featureGroup(markerArray);
+			mymap.fitBounds(group.getBounds());   
+		}
+	});
+})
+</script>
+{% endblock %}

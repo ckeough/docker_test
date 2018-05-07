@@ -1,0 +1,14 @@
+<h3>Add VA Requirement</h3>
+{% if freeWus %}
+<label for = "#wuVaReqSelect">Select an initial Work Unit with which to associate new VA Requirement Grouping: </label>
+<br>
+<select id = "wuVaReqSelect">
+{% for key, value in freeWus.items %}
+<option value = "Work Unit {{key}}">{{value}}</option>
+{% endfor %}
+</select><br><br>
+<input id = "createVaReq" type = "button" class = "btn-default" value = "Submit"/>
+{% else %}
+<h4>There are no available WUs. Please complete collection info before entering VA Requirements.</h4>
+{% endif %}
+

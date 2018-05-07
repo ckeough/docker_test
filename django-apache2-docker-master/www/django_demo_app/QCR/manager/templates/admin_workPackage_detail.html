@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+	<div class = "row no-gutters">
+		<div class='col-md-6'>
+			<div id = 'devWp{{wp.workPackageId}}' class = 'devWorkPackageDetail'>
+				{% if devMode %}
+				<h3>Work Package {{wp.workPackageId}} - Developer Operations</h3>
+				{% else %}
+				<h3>Work Package {{wp.workPackageId}}</h3>
+				{% endif %}
+				<a href="#" id = 'backWorkPackage' style = 'font-size:15;padding-left:10'>Back to Work Packages</a>		
+				<br>
+				<hr>
+				<table style="border:none;font-size:14px">
+				<tr><td style="border:none;width:150px" align='left'><label for = 'name'>Name:</label></td><td style="border:none;width:100px" align='right'><span id = 'name'>{{wp.name}}</span></td></tr>
+				<tr><td style="border:none;width:150px" align='left'><label for = 'type'>Type:</label></td><td style="border:none;width:100px" align='right'><span id = 'type'>{{wp.type}}</span></td></tr>
+				<tr><td style="border:none;width:150px" align='left'><label for = 'spec'>Project Spec:</label></td><td style="border:none;width:100px" align='right'><span id = 'spec'>{{wp.projectSpec}}</span></td></tr>
+				<tr><td style="border:none;width:150px" align='left'><label for = 'vendor'>Vendor:</label></td><td style="border:none;width:100px" align='right'><span id = 'vendor'>{{wp.vendor}}</span></td></tr>
+				<tr><td style="border:none;width:150px" align='left'><label for = 'poc'>Point of Contact:</label></td><td style="border:none;width:100px" align='right'><span id = 'poc'>{{wp.poc}}</span></td></tr>
+				<tr><td style="border:none;width:150px" align='left'><label for = 'email'>Email:</label></td><td style="border:none;width:100px" align='right'><span id = 'email'>{{wp.pocEmail}}</span></td></tr>
+				<table>
+				<label for = 'desc'>Project Description:</label>
+				<p id = 'desc'>{{ wp.description|safe }}</p>
+				<br>
+				<hr>
+				<label for = 'assignedWus'>Assigned Work Units</label>
+				{% if assignedWus %}
+				{% if devMode %}
+				<div = "wpAssignedWus">
+					<table id = 'assignedWorkUnits' style='font-size:14;border:none'>
+					{% for wu in assignedWus %}
+					<tr id = 'workUnitRow{{wu.workUnitId}}' class = 'workUnitRow'>
+						<td style='border:none;width:300px;padding-bottom:1em' align='left'>{{wu.name}} - Review: {{wu.review.name}}</td>
+						<td style='border:none;width:75px;padding-bottom:1em' align = 'right'><a id = "deleteWu{{wu.workUnitId}}" href = '#'>Delete</a></td>
+					</tr>
+					{% endfor %}
+					</table>					
+				</div><!-- wpAssignedWUs -->
+				{% else %}
+				<div = "wpAssignedWus">
+					<table style='font-size:14;border:none'>
+					{% for wu in assignedWus %}
+					<tr>
+					<td style='border:none;width:300px;padding-bottom:1em' align ='left'>{{wu.name}} - Review: {{wu.review.name}}</td>
+					</tr>
+					{% endfor %}
+					</table>
+				</div><!-- wpAssignedWUs -->
+				{% endif %}
+				{% else %}
+				<p>No Assigned Work Units</p>
+				{% endif %}
+				<br>
+				<hr>
+				<label for = 'freeWus'>Available Work Units</label>
+				{% if freeWus %}
+				{% if devMode %}
+				<div = "wpFreeWus">
+					<table id = 'freeWorkUnits' style = 'font-size:14px;border:none'>
+					{% for wu in freeWus %}
+					<tr id = 'workUnitRow{{wu.workUnitId}}' class = 'workUnitRow'><td style='border:none;width:200px;padding-bottom:1em' align= 'left'>{{wu.name}}</td><td style = 'border:none;width:75px;padding-bottom:1em' align = 'center'><a id = "deleteWu{{wu.workUnitId}}" href = '#'>Delete</a></td></tr>
+					<tr></tr>
+					{% endfor %}
+					</table>				
+				</div><!-- wpFreeWUs -->
+				{% else %}
+				<div = "wpFreeWus">
+					<table style='font-size:14px;border:none'>
+					{% for wu in freeWus %}
+					<tr>
+					<td style='border:none;width:300px;padding-bottom:1em' align ='left'>{{wu.1}}</td>
+					</tr>
+					{% endfor %}
+					</table>					
+				</div><!-- wpFreeWUs -->
+				{% endif %}
+				{% else %}
+				<p>No Free Work Units</p>
+				{% endif %}
+				{% if devMode %}
+				<button id = 'btnAddWu' class="btn-default">Add a Work Unit</button>
+				<br>
+				<br>
+				<hr>
+				<button id = "btnDelWp" class="btn-default">Delete Work Package</button>
+				{% endif %}
+				<br>
+				<br>
+			</div><!-- devWp -->
+		</div><!-- col-md-6 -->
+	</div><!-- row no-gutters -->
+</div><!-- container -->
+<script>
+var wpId = "{{wp.workPackageId}}";
+$(document).ready(function(){
+	var csrftoken = gimmeCookie('csrftoken');
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			}
+		}
+	})
+	function createWuHandler(){
+		var preUrl = '{% url "createWorkUnit" 123 %}';
+		var url = preUrl.replace('123', wpId)
+		$(document).off('click', '#btnAddWu').on('click', '#btnAddWu', function (e){
+			$.ajax({
+				url: url,
+				type: "POST",
+				success: function(data) {
+					location.reload();
+				}
+			});
+		});	
+	}
+	createWuHandler();
+	
+	function deleteWorkUnitCallback(id){
+		return function(){
+			var urlString = "{% url 'deleteWorkUnit' 123 %}";
+			var url = urlString.replace('123',id)
+			$.ajax({
+				url: url,
+				type: "POST",
+				success: function(data) {
+					if (data['result'] == 'success'){
+						var wpId = data['workPackageId']
+						var urlString = "{% url 'adminWpDetail' 123 %}";
+						var url = urlString.replace('123', wpId)
+						location.href = url;
+					}
+				}
+			});
+		}
+	}	
+	
+	$(document).off('click', '#backWorkPackage').on('click', '#backWorkPackage', function (e){
+		e.preventDefault();
+		location.href = "{% url 'adminHomePage' %}2";
+	});
+	$(document).off('click', '#btnDelWp').on('click', '#btnDelWp', function (e){
+		var url = "{% url 'deleteWorkPackage' %}";
+		var jsonDict = {};
+		jsonDict['workPackageId'] = wpId
+		var json = JSON.stringify(jsonDict);
+		$.ajax({
+			url: url,
+			type: "POST",
+			data: json,
+			success: function(data) {
+				if (data['success'] == 'True'){
+					location.href = "{% url 'adminHomePage' %}2";
+				}
+			}
+		});
+	});
+	$('.workUnitRow').each(function(){
+		id = $(this).attr('id').substring(11);
+		delBtnSelector = '#deleteWu' + id
+		$(delBtnSelector).click(deleteWorkUnitCallback(id));
+	});
+});
+</script>
+{% endblock %}

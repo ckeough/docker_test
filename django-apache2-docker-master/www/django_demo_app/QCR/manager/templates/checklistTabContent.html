@@ -1,0 +1,38 @@
+<br>
+{% if items %}
+	<table style = 'border:none'>
+	{% for item in items %}
+	<tr><td style = 'border:none;padding-bottom:15px;padding-top:15px'>{{item.placement}}.  </td><td style = 'border:none;padding-bottom:15px;padding-top:15px'>{{item.name}}</td><td style = 'border:none;padding-bottom:15px;padding-top:15px'><button id = 'deleteClItemBtn{{category|slice:":3"}}{{item.placement}}' class="btn-default deleteClItem">Delete</button></td></tr>
+	{% endfor %}
+	</table>
+	<br>
+{% else %}
+	<br>
+	<p>No steps have been added to the {{category}} category.</p>	
+	<br>
+{% endif %}
+<button id = 'showFormBtn{{category|slice:":3"}}' class="btn-default showForm">Add Step to {{category}} Category</button>
+<div id = 'form{{category|slice:":3"}}' style = 'display:none'>
+	<table>
+		<tr>
+			<th>Placement</th><th>Name/Description</th><th>Category</th>
+		</tr>
+		<tr>
+			{% for cat, positions in checklistPositions.items %}
+			{% if cat == category %}
+			
+			<td>
+				<select id = 'placement{{category|slice:":3"}}'>
+					{% for position in positions %}
+					<option value = '{{position}}'>{{position}}</option>
+					{% endfor %}
+				</select>
+			</td>
+			{% endif %}
+			{% endfor %}
+			<td><input id = 'desc{{category|slice:":3"}}' type = "text"></td><td><input id = 'cat{{category|slice:":3"}}' value = "{{category}}" readonly></td>
+		</tr>
+	</table>
+	<button id = 'submitFormBtn{{category|slice:":3"}}' class="btn-default submitForm">Submit</button>
+	<button id = 'cancelFormBtn{{category|slice:":3"}}' class="btn-default cancelForm">Cancel</button>
+</div>

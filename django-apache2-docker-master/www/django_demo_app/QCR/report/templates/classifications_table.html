@@ -1,0 +1,38 @@
+<h3>Classifications</h3>
+<table id = "classificationsTable" class = "cTable">
+    {% if classifications %}
+    <tr id = "cHeader">
+        <th></th>
+        <th>Classification ID</th>
+        <th>Classification Type</th>
+    </tr>
+    {% else %}
+    <tr id = "cHeader" style = "visibility: hidden">
+        <th></th>
+        <th>Classification ID</th>
+        <th>Classification Type</th>
+    </tr>
+    {% endif %}
+    {% if classifications %}
+            {% for c in classifications %}
+            <tr id = "classificationRow{{c.id}}" class = "classificationRow">
+                <td><input type="checkbox" id="deleteCheckbox{{c.id}}" name="deleteCheckbox{{c.id}}" class="classificationCheck" value="deleteCheckbox{{c.id}}"></td>
+                <td><input type="number" id="classificationId{{c.id}}" value = "{{ c.classificationId }}"></td>
+                <td><input type="text" id="classificationType{{c.id}}" value = "{{ c.classificationType }}"></td>
+            </tr>
+            {% endfor %}
+    {% else %}
+        <tr>
+            <p>There are no classifications for the Work Package associated with this Review</p>
+        </tr>
+    {% endif %}
+</table>
+<br>
+<div id = "classificationTableButtons">
+    <input id = "addClassification" type = "button" class = "btn-default" value = "Add Classification">
+    <input id = "resetClassifications" type = "button" class = "btn-default" value = "Reset Form">
+    <input id = "updateClassifications" type = "button" class = "btn-default" value = "Update Values">
+    <br>
+    <input id = "deleteClassification" type = "button" class = "btn-default" value = "Delete Selected">
+</div>
+<br>

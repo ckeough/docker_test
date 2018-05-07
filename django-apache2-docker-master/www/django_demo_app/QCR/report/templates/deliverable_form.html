@@ -1,0 +1,138 @@
+{% if deliverable %}
+<table id = 'deliverableTable{{ deliverable.id }}' style = "border:0">
+	<tbody>
+		<tr>
+			<td><label for="deliverableCategory{{deliverable.id}}">Deliverable Category:</label></td>
+			<td>
+				<select id="deliverableCategory{{deliverable.id}}" name="deliverableCategory{{deliverable.id}}">
+				{% for category in categories %}
+					<!-- Send back deliverable.deliverableCategory.name as a string -->
+					{% if type %}
+						{% if type == category.name %}
+							<option value= "{{category}}" selected>{{category}}</option>
+						{% else %}
+							<option value= "{{category}}">{{category}}</option>
+						{% endif %}
+					{% else %}
+						<option value= "{{category}}">{{category}}</option>
+					{% endif %}
+				{% endfor %}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="desc{{deliverable.id}}">Description:</label></td>
+			<td><input type="text" id="desc{{deliverable.id}}" value="{{deliverable.description}}"></td>
+		</tr>
+		<tr>
+			<td><label for="quantity{{deliverable.id}}">Quantity:</label></td>
+			<td><input type="number" id="quantity{{deliverable.id}}" value="{{deliverable.quantity}}"></td>
+		</tr>
+		<tr>
+			<td><label for="spatRef{{deliverable.id}}">Spatial Reference:</label></td>
+			<td><input type="text" id="spatRef{{deliverable.id}}" value="{{deliverable.spatialReference}}"></td>
+		</tr>
+		<tr>
+			<td><label for="reqPerContract{{deliverable.id}}">Required Per Contract:</label></td>
+			<td><select id="reqPerContract{{deliverable.id}}" name="reqPerContract{{deliverable.id}}">
+				{% if deliverable.reqPerContract %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select></td>
+		</tr>
+		<tr>
+			<td><label for="reqPerSpec{{deliverable.id}}">Required Per Spec:</label></td>
+			<td><select id="reqPerSpec{{deliverable.id}}" name="reqPerSpec{{deliverable.id}}">
+				{% if deliverable.reqPerSpec %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select></td>
+		</tr>
+		<tr>
+			<td><label for="delivered{{deliverable.id}}">Delivered:</label></td>
+			<td><select id="delivered{{deliverable.id}}" name="delivered{{deliverable.id}}">
+				{% if deliverable.delivered %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select></td>
+		</tr>
+		<tr>
+			<td><label for="comment{{deliverable.id}}">Comment:</label></td>
+			<td><input type="text" id="comment{{deliverable.id}}" value="{{deliverable.comment}}"></td>
+		</tr>
+		<tr>
+			<td><label for="accepted{{deliverable.id}}">Accepted:</label></td>
+			<td><select id="accepted{{deliverable.id}}" name="accepted{{deliverable.id}}">
+				{% if deliverable.accepted %}
+				<option value= "true" selected>Yes</option>
+				<option value = "false">No</option>
+				{% else %}
+				<option value= "true">Yes</option>
+				<option value = "false" selected>No</option>
+				{% endif %}
+			</select></td>
+		</tr>
+	</tbody>
+{% else %}
+<table id = 'addDeliverableTable'>
+	<tbody>
+		<tr>
+			<td><label for="addDeliverableCategory">Category :</label></td>
+			<td>
+				<select id="addDeliverableCategory" name="addDeliverableCategory">
+				{% for category in categories %}
+					<option value= "{{category.name}}">{{category.name}}</option>
+				{% endfor %}
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="addDescription">Description:</label></td>
+			<td><input type="text" id="addDescription"></td>
+		</tr>
+		<tr>
+			<td><label for="quantity">Quantity:</label></td>
+			<td><input type="number" id="addQuantity"></td>
+		</tr>
+		<tr>
+			<td><label for="spatRef">Spatial Reference:</label></td>
+			<td><input type="text" id="addSpatRef"></td>
+		</tr>
+		
+		<tr>
+			<td><label for="addReqPerContract">Required Per Contract:</label></td>
+			<td><select id="addReqPerContract" name="addReqPerContract"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+		</tr>
+		<tr>
+			<td><label for="addReqPerSpec">Required Per Spec:</label></td>
+			<td><select id="addReqPerSpec" name="addReqPerSpec"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+		</tr>
+		<tr>
+			<td><label for="addDelivered">Delivered:</label></td>
+			<td><select id="addDelivered" name="addDelivered"><option value= "true">Yes</option><option value = "false">No</option></select></td>
+		</tr>
+		<tr>
+			<td><label for="addComment">Comment:</label></td>
+			<td><input type="text" id="addComment"></td>
+		</tr>
+		<tr>
+			<td><label for="addAccepted">Accepted:</label></td>
+			<td><select id="addAccepted" name="addAccepted"><option value= "true">Yes</option><option value = "false" selected>No</option></select></td>
+		</tr>
+	</tbody>
+	{{wuSelect}}
+{% endif %}
+</table>
+<br>

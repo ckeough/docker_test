@@ -1,0 +1,57 @@
+<div class="container">
+	<div class = "row no-gutters">
+		<div id = "aggregatedWuDeliverable">
+			<div class='col-sm-5'>
+				<br>
+				<div id = 'aggregatedWuDeliverableForm' >
+					{% if dem %}
+						{% include 'dem_form.html' %}
+					{% endif %}
+					{% if swath %}	
+						{% include 'swath_form.html' %}
+					{% endif %}
+					{% if classified %}	
+						{% include 'classified_form.html' %}
+					{% endif %}
+				</div><!--  demForm -->
+				<div id = "vaRequirements">		
+					<h3>Vertical Accuracy Data</h3>
+					<div id = 'aggregatedWuDelivVaTable'>
+					{% include 'deliv_va_table.html' with addDivs='True' %}
+					</div>
+					<div id = 'noVaData' class = 'hideOnInit'>
+						<ul><li><h4>VA Requirements have not been entered.</h4></li></ul>
+					</div><!-- noVaData -->
+				</div><!-- vaRequirements -->
+				<div id = 'error'>
+					<h3>Errors:</h3>
+					<div id = 'errorList'>
+						{% if errors %}
+						{% include "error_table.html" %}
+						<br>
+						<div id = "errorTableButtons{{id}}" class = "errorTableButtons hideOnInit">
+							<input id = "updateErrors{{id}}" type = "button" class = "btn-default" value = "Update">
+							<input id = "cancelUpdate{{id}}" type = "button" class = "btn-default" value = "Cancel">
+						</div>
+						<br>
+						{% include "error_modals.html" %}
+						{% else %}
+						<p>There are no errors currently associated with this deliverable.</p>
+						{% endif %}
+					</div>
+					<div id = "addErrorForm{{id}}" class = "errorForm hideOnInit">
+						{% include "error_form.html" %}
+						<div id = "errorButtons{{id}}">
+							<input id = "submitErrorBtn{{id}}" type = "button" class = "btn-default" value = "Submit">
+							<input id = "cancelErrorBtn{{id}}" type = "button" class = "btn-default" value = "Cancel">
+						</div>
+						<br>	
+					</div>
+					<div id = "addErrorButton{{id}}">
+						<input id = "addError{{id}}" type = "button" class = "btn-default" value = "Add Error">
+					</div>
+				</div><!-- error -->
+			</div><!-- dem -->
+		</div><!-- col-sm-5 -->
+	</div><!-- row -->
+</div><!-- container -->

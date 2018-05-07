@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}<title>Reviews - {{user}}</title>{% endblock %}
+{% block body %}
+<body>
+<div class = 'container-fluid'>
+<h3>{{user}}'s Active Reviews:</h3>
+{% if review_list %}
+	<table id = "reviews" style = 'border:none'>
+	{% for review in review_list %}
+	<tr>
+	<td style = 'border:none;vertical-align:bottom;padding-bottom:5;padding-top:20'><h4 style = 'margin:0'>Review {{review.id}}</h4></td>
+	</tr>
+	<tr>
+	<td  style = 'border:none;vertical-align:bottom;'><a href="{% url 'review' review.id %}" style = 'font-size:15;padding-left:10'>Perform Updates</a></td>
+	</tr>
+	{% endfor %}
+	<table>
+{% else %}
+	<p>No reviews are available.</p>
+{% endif %}
+<br>
+</div><!-- container-fluid -->
+</body>
+{% endblock %}
