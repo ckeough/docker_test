@@ -2,7 +2,7 @@ FROM ubuntu
 
 RUN apt-get update
 RUN apt-get install -y apt-transport-https
-RUN apt-get -qq -y install curl
+RUN apt-get install curl
 RUN apt-get install -y apt
 RUN apt-get install -y vim
 RUN apt-get install -y apache2
