@@ -1,6 +1,8 @@
 version: "0.1"
 
 services: 
+  db:
+    image: postgres
   django-apache2:
     build: .
     container_name: django-apache2
@@ -10,3 +12,5 @@ services:
       - '8006:81'
     volumes: 
       - $PWD/www:/var/www/html
+    depends_on:
+      -db

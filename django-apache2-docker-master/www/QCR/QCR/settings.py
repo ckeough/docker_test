@@ -82,10 +82,9 @@ WSGI_APPLICATION = 'QCR.wsgi.application'
 DATABASES = {
     'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': 'QCR',                      
+		'NAME': 'postgres',                      
         'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     },
 	'pts': {
