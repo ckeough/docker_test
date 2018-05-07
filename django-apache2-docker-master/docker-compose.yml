@@ -11,6 +11,6 @@ services:
       - '3500:3500'
       - '8006:81'
     volumes: 
-      - $PWD/www:/var/www/html
+      - ./www:/var/www/html
     depends_on:
       - db
