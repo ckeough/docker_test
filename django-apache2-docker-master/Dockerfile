@@ -1,12 +1,12 @@
 FROM ubuntu
 
-RUN apt-get update
-RUN apt-get install -y software-properties-common
-RUN apt-get install -y apt
-RUN apt-get install -y vim
-RUN apt-get install -y curl
-RUN apt-get install -y apache2
-RUN apt-get install -y apache2-utils
+RUN apt-get -qq update
+RUN apt-get install -qq -y software-properties-common
+RUN apt-get install -qq -y apt
+RUN apt-get install -qq -y vim
+RUN apt-get install -qq -y curl
+RUN apt-get install -qq -y apache2
+RUN apt-get install -qq -y apache2-utils
 RUN apt-get -y install python3 libapache2-mod-wsgi-py3
 RUN ln /usr/bin/python3 /usr/bin/python
 RUN apt-get -y install python3-pip
