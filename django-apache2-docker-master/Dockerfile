@@ -1,7 +1,7 @@
 FROM ubuntu
 
 RUN apt-get update
-RUN apt-get install -y apt-utils
+RUN apt-get install -y apt
 RUN apt-get install -y software-properties-common
 RUN apt-get install -y vim
 RUN apt-get install -y curl
