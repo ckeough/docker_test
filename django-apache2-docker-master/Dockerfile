@@ -1,8 +1,7 @@
 FROM ubuntu
 
 RUN apt-get update
-RUN apt-get install -y -qq apt-utils
-RUN apt-get install -y software-properties-common
+
 RUN apt-get install -y vim
 RUN apt-get install -y curl
 RUN apt-get install -y apache2
