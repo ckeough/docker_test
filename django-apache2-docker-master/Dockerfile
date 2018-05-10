@@ -1,6 +1,6 @@
 FROM ubuntu
 
-RUN apt-get update
+RUN apt-get -qq -y update
 RUN apt-get install -qq -y apt-utils
 RUN apt-get install -qq -y software-properties-common
 RUN apt-get install -qq -y vim
