@@ -1,0 +1,6 @@
+django
+ptvsd
+psycopg2
+django-db-file-storage
+pillow
+reportlab

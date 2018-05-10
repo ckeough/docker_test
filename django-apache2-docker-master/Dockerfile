@@ -1,8 +1,8 @@
 FROM ubuntu
 
-RUN apt-get -qq update
-RUN apt-get install -y software-properties-common
+RUN apt-get update
 RUN apt-get install -y apt-utils
+RUN apt-get install -y software-properties-common
 RUN apt-get install -y vim
 RUN apt-get install -y curl
 RUN apt-get install -y apache2
@@ -14,8 +14,7 @@ RUN ln /usr/bin/pip3 /usr/bin/pip
 
 
 RUN pip install --upgrade pip
-RUN pip install django ptvsd
-RUN pip install psycopg2
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
