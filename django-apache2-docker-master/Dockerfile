@@ -14,7 +14,7 @@ RUN ln /usr/bin/pip3 /usr/bin/pip
 
 
 RUN pip install --upgrade pip
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install --trusted-host pypi.python.org -r ./requirements.txt
 
 
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
