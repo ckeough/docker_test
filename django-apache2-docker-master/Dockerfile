@@ -1,19 +1,19 @@
 FROM python:3.4
 
 RUN apt-get -y update
-RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 libgdal-dev python3-dev gcc
+RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 libgdal-dev
 
 
-ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
-ENV C_INCLUDE_PATH=/usr/include/gdal
+RUN export CPLUS_INCLUDE_PATH=/usr/include/gdal
+RUN export C_INCLUDE_PATH=/usr/include/gdal
 
 RUN mkdir /requirements
 WORKDIR /requirements
 ADD requirements.txt /requirements
 
-RUN pip install --upgrade pip
-RUN pip install --trusted-host pypi.python.org GDAL
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip3 install --upgrade pip
+RUN pip3 install --trusted-host pypi.python.org GDAL
+RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
 
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
