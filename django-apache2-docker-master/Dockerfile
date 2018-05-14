@@ -2,9 +2,7 @@ FROM python:3.4
 
 RUN apt-get -y update
 RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3
-RUN ln /usr/bin/python3 /usr/bin/python
-RUN apt-get -y install python3-pip
-RUN ln /usr/bin/pip3 /usr/bin/pip
+
 
 RUN mkdir /requirements
 WORKDIR /requirements
