@@ -1,7 +1,7 @@
 FROM python:3.4
 
 RUN apt-get -y update
-RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 libgdal-dev 
+RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 libgdal-dev python3-dev
 
 
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
