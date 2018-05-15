@@ -7,7 +7,6 @@ WORKDIR /requirements
 ADD requirements.txt /requirements
 
 RUN pip3 install --upgrade pip
-RUN pip3 install --trusted-host pypi.python.org GDAL
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
