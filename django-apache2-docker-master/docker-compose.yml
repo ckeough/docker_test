@@ -8,7 +8,6 @@ services:
     container_name: django-apache2
     ports:
       - '8008:80'
-      - '3500:3500'
     volumes: 
       - ./www:/var/www/html
     depends_on:
