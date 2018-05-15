@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 RUN apt-get -y update
-RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 gdal-bin python3-gdal
+RUN apt-get install -y apt-utils software-properties-common vim curl apache2 apache2-utils python3 libapache2-mod-wsgi-py3 gdal-bin python3-gdal pip3
 
 RUN mkdir /requirements
 WORKDIR /requirements
