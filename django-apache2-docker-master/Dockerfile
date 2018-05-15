@@ -11,5 +11,6 @@ RUN pip3 install --trusted-host pypi.python.org GDAL
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
-EXPOSE 80 3500
+#Allow container port 80 to be exposed to the host on both TCP and UDP
+EXPOSE 80
 CMD ["apache2ctl", "-D", "FOREGROUND"]
