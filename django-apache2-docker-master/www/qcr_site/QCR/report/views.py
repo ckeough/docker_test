@@ -88,7 +88,7 @@ from .models import FileModelReportErrorImage
 	
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .decorators import qcr_user_authenticated
 
