@@ -1,5 +1,5 @@
 from .models import Review
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponseRedirect
 
 def user_is_assigned_review(function):
